@@ -1,29 +1,8 @@
-# vue_spa
+# Patra_Vue
+> Web content for PATRA (Project's activities tracking application)
 
-## Project setup
-```
-npm install
-```
+## Basic features
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Build and run
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Develop
