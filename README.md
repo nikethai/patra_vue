@@ -5,4 +5,10 @@
 
 ## Build and run
 
+### Initialize
+> After cloned, type >> npm install
+
+### To run
+> type >> npm run serve
+
 ## Develop
