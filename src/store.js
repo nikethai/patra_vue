@@ -21,7 +21,7 @@ export default new Vuex.Store({
           let value = localStorage.getItem('jwt');
 
           // console.log the iteration key and value
-          // console.log('Value: ' + value);
+          console.log('Value: ' + value);
           commit('setUser', value);
 
         }

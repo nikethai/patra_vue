@@ -9,21 +9,23 @@
           <router-link to="/Users">Users</router-link>
         </b-nav>
         <b-navbar-nav class="ml-auto">
-          <loginNavbar/>
+          <loginNavbar />
         </b-navbar-nav>
       </b-navbar>
-      <router-view />
     </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import loginNavbar from "@/components/loginNavbar.vue"
+import loginNavbar from "@/components/loginNavbar.vue";
+import { mapActions } from "vuex";
+
 export default {
-  components:{
+  components: {
     loginNavbar
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -36,6 +38,14 @@ export default {
 }
 #nav {
   padding: 30px;
+  background: rgb(216, 228, 235);
+  background: linear-gradient(
+    90deg,
+    rgba(216, 228, 235, 1) 8%,
+    rgba(210, 215, 255, 1) 40%,
+    rgba(0, 228, 255, 0.7847514005602241) 57%,
+    rgba(0, 151, 255, 1) 77%
+  );
 }
 
 #nav a {
