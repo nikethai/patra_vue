@@ -1,13 +1,15 @@
 <template>
   <div>
     <form @submit="addTodo">
-      <input type="text" v-model="name" placeholder="Add Todo>" />
+      <input type="text" v-model="name" placeholder="Add Todo" class="new-task" />
       <input type="submit" value="Submit" class="btn" />
     </form>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "AddTodo",
   data() {
@@ -16,6 +18,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["addTask"]),
     addTodo: function(e) {
       const newTodo = {
         id: Math.floor(1000 + Math.random() * 9000),
@@ -23,9 +26,10 @@ export default {
         isCompleted: false
       };
 
-      this.$emit("add-todo", newTodo);
-      
-      this.name = '';
+      // this.$emit("add-todo", newTodo);
+      this.addTask(newTodo);
+
+      this.name = "";
       e.preventDefault();
     }
   }
@@ -43,6 +47,28 @@ input[type="text"] {
 input[type="submit"] {
   flex: 2;
   background-color: black;
-  color: whitesmoke
+  color: whitesmoke;
+}
+.new-task {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  font-size: 24px;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: 1.4em;
+  border: 0;
+  color: inherit;
+  padding: 6px;
+  border: 1px solid rgb(100, 96, 96);
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.new-task {
+  padding: 16px 16px 16px 60px;
+  background: rgba(0, 0, 0, 0.003);
+  box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
 }
 </style>

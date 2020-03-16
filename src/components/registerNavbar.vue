@@ -1,9 +1,9 @@
 /* eslint-disable */
 <template>
     <div id="navbar">
-        <div id="loginDiv">
-            <a href="#" id="show-model" v-b-modal.mymodal>Login</a>
-            <b-modal id="mymodal" ref="modal" title="Login" @ok=checkForm @hidden=resetModal @cancel=resetModal no-stacking>
+        <div id="regisDiv">
+            <a href="#" id="show-model2" v-b-modal.mymodal2>Register</a>
+            <b-modal id="mymodal2" ref="modal" title="Register" @ok=checkForm @hidden=resetModal @cancel=resetModal no-stacking>
                 <form id="login" @submit="checkForm">
                     <p v-if="errors.length">
                         <b>Please correct the following error(s):</b>
@@ -25,9 +25,9 @@
                     </p>
 
                 </form>
-                Don't have an account? <input type="button" v-b-modal.mymodal2  value="Register Now"/>
+                Having an account already? <input type="button" v-b-modal.mymodal  value="Login"/>
                 <template v-slot:modal-footer="{ok,cancel}">
-                    <b-button variant="success" @click="ok()">Login</b-button>
+                    <b-button variant="success" @click="ok()">Register</b-button>
                     <b-button variant="danger" @click="cancel()">Cancel</b-button>
                 </template>
             </b-modal>
@@ -43,7 +43,7 @@
     import { mapActions } from 'vuex';
 
     export default {
-        name: "loginNav",
+        name: "regisNav",
         data() {
             return {
                 errors: [],

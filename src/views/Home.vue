@@ -1,27 +1,21 @@
 /* eslint-disable */
 <template>
-  <div class="home">
+  <div class="container-fluid">
     <b-row>
-      <div class="col-4">
+      <div class="col-md-4 ">
         <b-card>
-          <b-card-title>
-            Checklist 1
-          </b-card-title>
+          <b-card-title>Checklist 1</b-card-title>
           <b-card-body>
-            <AddTodo v-on:add-todo="addTodo" />
-            <Todo v-bind:todos="todos" v-on:del-todo="delTodos" />
+            <AddTodo />
+            <Todo />
           </b-card-body>
         </b-card>
       </div>
-      <div class="col-8">
+      <div class="col-md-8">
         <b-card>
           <b-card-body>
-            <b-card-title>
-              Hello
-            </b-card-title>
-            <b-card-text>
-              Lo lo con kek
-            </b-card-text>
+            <b-card-title>Hello</b-card-title>
+            <b-card-text>{{getTaskView.desc}}</b-card-text>
           </b-card-body>
         </b-card>
       </div>
@@ -33,6 +27,7 @@
 // @ is an alias to /src
 import Todo from "@/components/Todo.vue";
 import AddTodo from "@/components/AddTodo.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "home",
@@ -40,26 +35,12 @@ export default {
     Todo,
     AddTodo
   },
-  data() {
-    return {
-      todos: [
-        {
-          id: 1,
-          name: "Nam nyan",
-          isCompleted: false
-        },
-        { id: 2, name: "Tus Tus", isCompleted: true },
-        { id: 3, name: "Thong always Wong", isCompleted: false }
-      ]
-    };
-  },
-  methods: {
-    delTodos(id) {
-      this.todos = this.todos.filter(todo => todo.id !== id);
-    },
-    addTodo(newTodo) {
-      this.todos = [...this.todos, newTodo];
-    }
+  computed: {
+    ...mapGetters(["getTaskView"])
   }
 };
 </script>
+
+<style scoped>
+
+</style>

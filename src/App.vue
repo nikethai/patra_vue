@@ -9,7 +9,7 @@
           <router-link to="/Users">Users</router-link>
         </b-nav>
         <b-navbar-nav class="ml-auto">
-          <loginNavbar />
+          <NavbarUser />
         </b-navbar-nav>
       </b-navbar>
     </div>
@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import loginNavbar from "@/components/loginNavbar.vue";
+import NavbarUser from "@/components/NavbarUser.vue";
 import { mapActions } from "vuex";
 
 export default {
   components: {
-    loginNavbar
-  },
+    NavbarUser
+  }
 };
 </script>
 
