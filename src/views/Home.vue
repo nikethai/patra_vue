@@ -28,7 +28,6 @@
 import Todo from "@/components/Todo.vue";
 import AddTodo from "@/components/AddTodo.vue";
 import { mapGetters } from "vuex";
-
 export default {
   name: "home",
   components: {
@@ -42,5 +41,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

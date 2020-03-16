@@ -1,43 +1,65 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <b-navbar>
-        <b-navbar-brand>IQ30</b-navbar-brand>
-        <b-nav>
-          <router-link to="/About">About</router-link>
-          <router-link to="/">Home</router-link>
-          <router-link to="/Users">Users</router-link>
-        </b-nav>
-        <b-navbar-nav class="ml-auto">
-          <NavbarUser />
-        </b-navbar-nav>
-      </b-navbar>
-    </div>
-    <router-view />
-  </div>
+  <v-app class="v-app">
+    <v-app-bar disable-route-watcher disable-resize-watcher class="nav-bar" app hide-on-scroll color="accent" dense flat>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-toolbar-title class="patr">Patra</v-toolbar-title>
+      <router-link to="/About">
+        <v-btn color="orange" text value="About">
+          <span>About</span>
+        </v-btn>
+      </router-link>
+      <router-link to="/">
+        <v-btn color="orange" text value="Home">
+          <span>Home</span>
+        </v-btn>
+      </router-link>
+      <router-link to="/Users">
+        <v-btn color="orange" text value="Users">
+          <span>Users</span>
+        </v-btn>
+      </router-link>
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer" app>
+      <NavbarUser/>
+    </v-navigation-drawer>
+    <v-content>
+      <router-view />
+    </v-content>
+  </v-app>
 </template>
 
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
+import Test from "@/components/test.vue";
 import { mapActions } from "vuex";
 
 export default {
   components: {
-    NavbarUser
+    NavbarUser,
+    Test
+  },
+  data: () => ({
+    item: { icon: "mdi-logout", name: "Logout", link: "/" },
+    drawer: false
+  }),
+  methods: {
+    doSomething() {
+      // alert("Yo");
+    }
   }
 };
 </script>
 
 <style>
-#app {
+.v-app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
-#nav {
-  padding: 30px;
+.nav-bar {
+  margin-bottom: 30px;
   background: rgb(216, 228, 235);
   background: linear-gradient(
     90deg,
@@ -48,13 +70,16 @@ export default {
   );
 }
 
-#nav a {
+.nav-bar a {
   font-weight: bold;
   color: #2c3e50;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
-#nav a.router-link-exact-active {
+.nav-bar a.router-link-exact-active {
+  color: #42b983;
+}
+.patr {
   color: #42b983;
 }
 </style>

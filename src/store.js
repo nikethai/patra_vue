@@ -15,12 +15,16 @@ export default new Vuex.Store({
     { id: 2, name: "Tus Tus", isCompleted: true },
     { id: 3, name: "Thong always Wong", isCompleted: false }
     ],
-    viewTask: {}
+    viewTask: {},
+    loginDialog: false,
+    registerDialog: false
   },
   getters: {
     allUsers: state => state.logged,
     allTask: state => state.task,
-    getTaskView: state => state.viewTask
+    getTaskView: state => state.viewTask,
+    isLoginPressed: state => state.loginDialog,
+    isRegisterPressed: state => state.registerDialog
   },
   actions: {
     async login({ commit }, resp) {
@@ -54,6 +58,12 @@ export default new Vuex.Store({
     async getTask({ commit }, task) {
       commit('getTask', task);
     },
+    async setLoginDialog({ commit }) {
+      commit('setLoginDialog');
+    },
+    async setRegisterDialog({ commit }) {
+      commit('setRegisterDialog');
+    },
   },
   mutations: {
     addUser: (state, data) => (state.logged.push(data)),
@@ -64,7 +74,9 @@ export default new Vuex.Store({
       task.splice(task.findIndex(i => i.id == delItem), 1);
     },
     markCompleted: (state, task) => (task.isCompleted = !task.isCompleted),
-    getTask: (state, task) => (state.viewTask = task)
+    getTask: (state, task) => (state.viewTask = task),
+    setLoginDialog: (state, task) => (state.loginDialog = !state.loginDialog),
+    setRegisterDialog: (state, task) => (state.registerDialog = !state.registerDialog),
   }
 
 });

@@ -1,27 +1,70 @@
 <template>
   <div id="loggedinDiv" v-if="allUsers.length>0">
-    <div v-for="usr in allUsers" :key="usr.id">{{usr.username}}</div>
+    <v-list-item @click="getUser()" class="px-2">
+      <v-list-item-avatar>
+        <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+      </v-list-item-avatar>
+
+      <v-list-item-title>John Leider</v-list-item-title>
+    </v-list-item>
+
+    <v-divider></v-divider>
+    <v-list dense nav>
+      <v-list-item :to="item.link" link>
+        <v-list-item-icon>
+          <v-icon>{{item.icon}}</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{item.name}}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
   </div>
   <div v-else>
-    <loginNavbar />
-    <registerNavbar/>
+    <v-list-item @click="doSomething()" class="px-2">
+      <v-list-item-icon>
+        <v-icon>mdi-login</v-icon>
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title>
+          Login
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <loginNavbarVuetify />
+    <registerNavbarVuetify />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
-import loginNavbar from "@/components/loginNavbar.vue";
-import registerNavbar from "@/components/registerNavbar.vue";
+// import loginNavbar from "@/components/loginNavbar.vue";
+import loginNavbarVuetify from "@/components/loginNavbarVuetify.vue";
+// import registerNavbar from "@/components/registerNavbar.vue";
+import registerNavbarVuetify from "@/components/registerNavbarVuetify.vue";
 
 export default {
   name: "NavbarUser",
+  data: () => ({
+    item: { icon: "mdi-logout", name: "Logout", link: "/" }
+  }),
   components: {
-    loginNavbar,
-    registerNavbar
+    // loginNavbar,
+    loginNavbarVuetify,
+    registerNavbarVuetify
+    // registerNavbar
   },
   methods: {
-    ...mapActions(["fetchLogged"])
+    ...mapActions(["fetchLogged"]),
+    ...mapActions(["setLoginDialog"]),
+    doSomething(){
+      this.setLoginDialog();
+    },
+    getUser(){
+      alert("Nam nyannnnnnnnnnnnn");
+    }
   },
   mounted: function() {
     this.fetchLogged();
