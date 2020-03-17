@@ -1,26 +1,24 @@
 /* eslint-disable */
 <template>
-  <div class="container-fluid">
-    <b-row>
-      <div class="col-md-4 ">
-        <b-card>
-          <b-card-title>Checklist 1</b-card-title>
-          <b-card-body>
+  <v-container fluid grid-list-md>
+    <v-row>
+      <v-col cols="md-4" md>
+        <v-card class="mx-auto" shaped>
+          <v-card-title class="justify-center">Checklist1</v-card-title>
+          <v-card-text>
             <AddTodo />
             <Todo />
-          </b-card-body>
-        </b-card>
-      </div>
-      <div class="col-md-8">
-        <b-card>
-          <b-card-body>
-            <b-card-title>Hello</b-card-title>
-            <b-card-text>{{getTaskView.desc}}</b-card-text>
-          </b-card-body>
-        </b-card>
-      </div>
-    </b-row>
-  </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="md-8" md>
+        <v-card class="mx-auto" shaped>
+          <v-card-title class="justify-center">Hello</v-card-title>
+          <v-card-text>{{getTaskView.desc}}</v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

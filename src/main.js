@@ -6,9 +6,11 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from './plugins/vuetify';
+import Vuetify from 'vuetify/lib'
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
+Vue.use(Vuetify);
 Vue.component('v-alert', {});
 Vue.component('v-app', {});
 

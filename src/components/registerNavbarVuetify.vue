@@ -30,7 +30,7 @@
               </v-col>
             </v-row>
           </v-container>Have an account?
-          <v-btn color="warning">Login</v-btn>
+          <v-btn color="warning" @click="LoginPress()">Login</v-btn>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -50,14 +50,14 @@ export default {
     dialog: false
   }),
   methods: {
-    ...mapActions([""]),
     ...mapActions(["setRegisterDialog"]),
+    ...mapActions(["setLoginDialog"]),
     CancelPress() {
       this.setRegisterDialog();
     },
     LoginPress() {
-      this.setRegisterDialog();
       this.setLoginDialog();
+      this.setRegisterDialog();
     }
   },
   computed: {

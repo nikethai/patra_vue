@@ -7,6 +7,7 @@
 
       <v-list-item-title>John Leider</v-list-item-title>
     </v-list-item>
+    <userInfo />
 
     <v-divider></v-divider>
     <v-list dense nav>
@@ -27,9 +28,7 @@
         <v-icon>mdi-login</v-icon>
       </v-list-item-icon>
       <v-list-item-content>
-        <v-list-item-title>
-          Login
-        </v-list-item-title>
+        <v-list-item-title>Login</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <loginNavbarVuetify />
@@ -44,6 +43,7 @@ import { mapActions } from "vuex";
 import loginNavbarVuetify from "@/components/loginNavbarVuetify.vue";
 // import registerNavbar from "@/components/registerNavbar.vue";
 import registerNavbarVuetify from "@/components/registerNavbarVuetify.vue";
+import userInfo from "@/components/userInfo.vue";
 
 export default {
   name: "NavbarUser",
@@ -53,17 +53,19 @@ export default {
   components: {
     // loginNavbar,
     loginNavbarVuetify,
-    registerNavbarVuetify
+    registerNavbarVuetify,
+    userInfo
     // registerNavbar
   },
   methods: {
     ...mapActions(["fetchLogged"]),
     ...mapActions(["setLoginDialog"]),
-    doSomething(){
+    ...mapActions(["setUserInfo"]),
+    doSomething() {
       this.setLoginDialog();
     },
-    getUser(){
-      alert("Nam nyannnnnnnnnnnnn");
+    getUser() {
+      this.setUserInfo();
     }
   },
   mounted: function() {
