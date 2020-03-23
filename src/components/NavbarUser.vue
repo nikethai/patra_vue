@@ -11,13 +11,13 @@
 
     <v-divider></v-divider>
     <v-list dense nav>
-      <v-list-item :to="item.link" link>
+      <v-list-item v-for="link in item" :key="link.name" :to="link.link" link>
         <v-list-item-icon>
-          <v-icon>{{item.icon}}</v-icon>
+          <v-icon>{{link.icon}}</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>{{item.name}}</v-list-item-title>
+          <v-list-item-title>{{link.name}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -48,7 +48,12 @@ import userInfo from "@/components/userInfo.vue";
 export default {
   name: "NavbarUser",
   data: () => ({
-    item: { icon: "mdi-logout", name: "Logout", link: "/" }
+    item: [
+      { icon: "mdi-home-circle", name: "Home", link: "/" },
+      { icon: "mdi-information", name: "About", link: "/About" },
+      { icon: "mdi-account-circle", name: "User", link: "/User" },
+      { icon: "mdi-virus", name: "Corona", link: "/Corona" }
+    ]
   }),
   components: {
     // loginNavbar,

@@ -1,26 +1,21 @@
 <template>
   <v-app class="v-app">
-    <v-app-bar disable-route-watcher disable-resize-watcher class="nav-bar" app hide-on-scroll color="accent" dense flat>
+    <v-app-bar
+      disable-route-watcher
+      disable-resize-watcher
+      class="nav-bar"
+      :collapse="!collapseOnScroll"
+      :collapse-on-scroll="collapseOnScroll"
+      app
+      color="accent"
+      dense
+      flat
+    >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="patr">Patra</v-toolbar-title>
-      <router-link to="/About">
-        <v-btn color="orange" text value="About">
-          <span>About</span>
-        </v-btn>
-      </router-link>
-      <router-link to="/">
-        <v-btn color="orange" text value="Home">
-          <span>Home</span>
-        </v-btn>
-      </router-link>
-      <router-link to="/Users">
-        <v-btn color="orange" text value="Users">
-          <span>Users</span>
-        </v-btn>
-      </router-link>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
-      <NavbarUser/>
+      <NavbarUser />
     </v-navigation-drawer>
     <v-content>
       <router-view />
@@ -40,6 +35,7 @@ export default {
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
+    collapseOnScroll: true,
     drawer: false
   }),
   methods: {

@@ -1,6 +1,7 @@
 /* eslint-disable */
 <template>
   <v-container fluid grid-list-md>
+
     <v-row>
       <v-col cols="md-4" md>
         <v-card class="mx-auto" shaped>
