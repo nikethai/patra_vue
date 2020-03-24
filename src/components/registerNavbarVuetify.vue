@@ -26,10 +26,14 @@
                 <v-text-field label="Email*" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field label="Password*" type="password" required></v-text-field>
+                <v-text-field
+                  label="Password*"
+                  type="password"
+                  required
+                ></v-text-field>
               </v-col>
-            </v-row>
-          </v-container>Have an account?
+            </v-row> </v-container
+          >Have an account?
           <v-btn color="warning" @click="LoginPress()">Login</v-btn>
         </v-card-text>
         <v-card-actions>

@@ -1,5 +1,5 @@
 <template>
-  <div id="loggedinDiv" v-if="allUsers.length>0">
+  <div id="loggedinDiv" v-if="allUsers.length > 0">
     <v-list-item @click="getUser()" class="px-2">
       <v-list-item-avatar>
         <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
@@ -13,11 +13,11 @@
     <v-list dense nav>
       <v-list-item v-for="link in item" :key="link.name" :to="link.link" link>
         <v-list-item-icon>
-          <v-icon>{{link.icon}}</v-icon>
+          <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-icon>
 
         <v-list-item-content>
-          <v-list-item-title>{{link.name}}</v-list-item-title>
+          <v-list-item-title>{{ link.name }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -43,7 +43,6 @@ import { mapActions } from "vuex";
 import loginNavbarVuetify from "@/components/loginNavbarVuetify.vue";
 // import registerNavbar from "@/components/registerNavbar.vue";
 import registerNavbarVuetify from "@/components/registerNavbarVuetify.vue";
-import userInfo from "@/components/userInfo.vue";
 
 export default {
   name: "NavbarUser",
@@ -51,26 +50,25 @@ export default {
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
       { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-account-circle", name: "User", link: "/User" },
-      { icon: "mdi-virus", name: "Corona", link: "/Corona" }
+      { icon: "mdi-account-circle", name: "User", link: "/Users" },
+      { icon: "mdi-virus", name: "Corona", link: "/Corona" },
+      { icon: "mdi-calendar-check", name: "Task", link: "/Task" }
     ]
   }),
   components: {
     // loginNavbar,
     loginNavbarVuetify,
     registerNavbarVuetify,
-    userInfo
     // registerNavbar
   },
   methods: {
     ...mapActions(["fetchLogged"]),
     ...mapActions(["setLoginDialog"]),
-    ...mapActions(["setUserInfo"]),
     doSomething() {
       this.setLoginDialog();
     },
     getUser() {
-      this.setUserInfo();
+      this.$router.push('users')
     }
   },
   mounted: function() {
@@ -82,5 +80,4 @@ export default {
 };
 </script>
 
-<style scope>
-</style>
+<style scope></style>

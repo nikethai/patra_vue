@@ -16,8 +16,12 @@
         </b-col> -->
 
         <div class="row">
-          <div class="col" v-for="(item,index) in currentPageItems" :key="index">
-            <img :src="item.file_url"/>
+          <div
+            class="col"
+            v-for="(item, index) in currentPageItems"
+            :key="index"
+          >
+            <img :src="item.file_url" />
           </div>
         </div>
       </b-container>

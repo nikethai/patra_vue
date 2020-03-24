@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-
     <v-app-bar app clipped-right color="blue-grey" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Toolbar</v-toolbar-title>
@@ -25,16 +24,10 @@
     <v-content>
       <v-container class="fill-height" fluid>
         <v-row justify="center" align="center">
-          <v-col class="shrink">
-            
-            
-          </v-col>
+          <v-col class="shrink"> </v-col>
         </v-row>
       </v-container>
     </v-content>
-
-
-  
   </v-app>
 </template>
 

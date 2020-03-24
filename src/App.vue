@@ -26,7 +26,6 @@
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
 import Test from "@/components/test.vue";
-import { mapActions } from "vuex";
 
 export default {
   components: {

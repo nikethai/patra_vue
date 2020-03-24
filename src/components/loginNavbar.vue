@@ -78,7 +78,7 @@
                             }
 
                         })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log(e)); //eslint-disable-line no-console
                 }
 
                 this.errors = [];

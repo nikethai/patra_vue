@@ -1,17 +1,17 @@
 <template>
   <div>
     <v-text-field
-        name="newTask"
-        solo
-        round
-        outlined
-        counter
-        label="What is your task?"
-        id="newTask"
-        clearable
-        v-model="name"
-        @keyup.enter="addTodo"
-      ></v-text-field>
+      name="newTask"
+      solo
+      round
+      outlined
+      counter
+      label="What is your task?"
+      id="newTask"
+      clearable
+      v-model="name"
+      @keyup.enter="addTodo"
+    ></v-text-field>
   </div>
 </template>
 
@@ -44,7 +44,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

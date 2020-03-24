@@ -17,7 +17,9 @@
         </v-card-text>
         <span>
           Don't have an account?
-          <v-btn small color="warning" @click="registerIsPressed()">Register!</v-btn>
+          <v-btn small color="warning" @click="registerIsPressed()"
+            >Register!</v-btn
+          >
         </span>
         <v-card-actions>
           <v-spacer></v-spacer>

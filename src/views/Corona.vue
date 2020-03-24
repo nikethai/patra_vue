@@ -11,7 +11,14 @@
     >
       <template v-slot:header>
         <v-toolbar dark color="blue" class="mb-1">
-          <v-text-field v-model="search" clearable flat solo-inverted hide-details label="Search"></v-text-field>
+          <v-text-field
+            v-model="search"
+            clearable
+            flat
+            solo-inverted
+            hide-details
+            label="Search"
+          ></v-text-field>
           <template v-if="$vuetify.breakpoint.mdAndUp">
             <v-spacer></v-spacer>
             <v-select
@@ -28,19 +35,31 @@
 
       <template v-slot:default="props">
         <v-row>
-          <v-col v-for="item in props.items" :key="item.country" cols="12" sm="6" md="4" lg="3">
+          <v-col
+            v-for="item in props.items"
+            :key="item.country"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
             <v-card>
-              <v-card-title class="subheading font-weight-bold">{{ item.country }}</v-card-title>
+              <v-card-title class="subheading font-weight-bold">{{
+                item.country
+              }}</v-card-title>
 
               <v-divider></v-divider>
 
               <v-list dense>
                 <v-list-item v-for="(key, index) in filteredKeys" :key="index">
-                  <v-list-item-content :class="{ 'blue--text': sortBy === key }">{{ key }}:</v-list-item-content>
+                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"
+                    >{{ key }}:</v-list-item-content
+                  >
                   <v-list-item-content
                     class="align-end"
                     :class="{ 'blue--text': sortBy === key }"
-                  >{{ item[key] }}</v-list-item-content>
+                    >{{ item[key] }}</v-list-item-content
+                  >
                 </v-list-item>
               </v-list>
             </v-card>
@@ -71,8 +90,16 @@
 
           <v-spacer></v-spacer>
 
-          <span class="mr-4 grey--text">Page {{ page }} of {{ numberOfPages }}</span>
-          <v-btn fab dark color="blue darken-3" class="mr-1" @click="formerPage">
+          <span class="mr-4 grey--text"
+            >Page {{ page }} of {{ numberOfPages }}</span
+          >
+          <v-btn
+            fab
+            dark
+            color="blue darken-3"
+            class="mr-1"
+            @click="formerPage"
+          >
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
           <v-btn fab dark color="blue darken-3" class="ml-1" @click="nextPage">
@@ -83,8 +110,8 @@
     </v-data-iterator>
   </v-container>
 </template>
- 
- <script>
+
+<script>
 import axios from "axios";
 
 export default {
@@ -93,7 +120,7 @@ export default {
     return {
       countries: [],
       search: "",
-      itemsPerPageArray: [12,40, 80, 120, 160, 200],
+      itemsPerPageArray: [12, 40, 80, 120, 160, 200],
       filter: {},
       page: 1,
       itemsPerPage: 12,
@@ -130,17 +157,17 @@ export default {
       return this.keys.filter(key => key !== `country`);
     }
   },
+  /* eslint-disable no-console */
   created() {
-      axios
-        .get("https://coronavirus-19-api.herokuapp.com/countries")
-        .then(res => {
-          this.countries = res.data;
-          console.log(this.countries)
-        })
-        .catch(e => console.log(e));
+    axios
+      .get("https://coronavirus-19-api.herokuapp.com/countries")
+      .then(res => {
+        this.countries = res.data;
+        console.log(this.countries); 
+      })
+      .catch(e => console.log(e));
   }
 };
 </script>
- 
- <style>
-</style>
+
+<style></style>

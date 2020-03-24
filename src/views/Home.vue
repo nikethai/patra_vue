@@ -1,21 +1,30 @@
-/* eslint-disable */
 <template>
-  <v-container fluid grid-list-md>
-
+  <v-container fluid>
+    <v-btn color="info" text>CheckList</v-btn>
     <v-row>
-      <v-col cols="md-4" md>
-        <v-card class="mx-auto" shaped>
-          <v-card-title class="justify-center">Checklist1</v-card-title>
-          <v-card-text>
-            <AddTodo />
-            <Todo />
-          </v-card-text>
+      <v-col cols="12" md="4">
+        <v-card @click="doSomething">
+          <v-btn text color="success">Checklist1</v-btn>
         </v-card>
       </v-col>
-      <v-col cols="md-8" md>
-        <v-card class="mx-auto" shaped>
-          <v-card-title class="justify-center">Hello</v-card-title>
-          <v-card-text>{{getTaskView.desc}}</v-card-text>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-btn text color="success">Checklist2</v-btn>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-btn text color="success">Checklist3</v-btn>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-btn text color="success">Checklist4</v-btn>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-btn text color="success">Checklist5</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -23,21 +32,19 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Todo from "@/components/Todo.vue";
-import AddTodo from "@/components/AddTodo.vue";
-import { mapGetters } from "vuex";
 export default {
-  name: "home",
-  components: {
-    Todo,
-    AddTodo
+  name: 'Home',
+  data(){
+    return{
+
+    }
   },
-  computed: {
-    ...mapGetters(["getTaskView"])
+  methods:{
+    doSomething(){
+      this.$router.push({path: `/task/${1}`})
+    }
   }
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
