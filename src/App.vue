@@ -2,7 +2,7 @@
   <v-app class="v-app">
     <v-app-bar
       disable-route-watcher
-      disable-resize-watcher
+      disable-resize-watcher="true"
       class="nav-bar"
       :collapse="!collapseOnScroll"
       :collapse-on-scroll="collapseOnScroll"

@@ -23,7 +23,7 @@
         </span>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed color="error" @click="dialog = false">Cancel</v-btn>
+          <v-btn depressed color="error" @click="loginIsPressed()">Cancel</v-btn>
           <v-btn depressed color="primary" @click="dialog = false">Login</v-btn>
         </v-card-actions>
       </v-card>

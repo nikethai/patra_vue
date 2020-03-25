@@ -41,7 +41,7 @@ export default {
   },
   methods:{
     doSomething(){
-      this.$router.push({path: `/task/${1}`})
+      this.$router.push({path: `/task`})
     }
   }
 };

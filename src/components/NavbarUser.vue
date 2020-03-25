@@ -7,7 +7,6 @@
 
       <v-list-item-title>John Leider</v-list-item-title>
     </v-list-item>
-    <userInfo />
 
     <v-divider></v-divider>
     <v-list dense nav>

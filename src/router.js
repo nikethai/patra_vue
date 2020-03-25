@@ -56,7 +56,7 @@ const router = new Router({
       path: "/users",
       name: "users",
       meta: {
-        requiresAuth: true,
+        requiresAuth: false,
         title: "Users"
       },
       // route level code-splitting
