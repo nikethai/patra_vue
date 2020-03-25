@@ -17,19 +17,23 @@
           <div class="overline mb-4">Status: {{getTaskView.isCompleted}}</div>
           <v-card-text>{{ getTaskView.desc }}</v-card-text>
           <v-divider></v-divider>
-          <div v-if="getTaskView.comments && getTaskView.comments.length ">
-            <v-container>
-              <v-row class="mx-auto">
-                <v-col cols="6">
+          <div class="container" v-if="getTaskView.comments && getTaskView.comments.length ">
+            <v-row class="mx-auto grey lighten-5">
+              <v-col cols="3"></v-col>
+              <v-col cols="6" style="text-align: left">
+                <v-row no-gutters>
                   <v-list-item-avatar>
                     <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
                   </v-list-item-avatar>
-                </v-col>
-                <v-col cols="3">
-                    <v-list-item-title> Not Nam Nyan</v-list-item-title>
-                </v-col>
-              </v-row>
-            </v-container>
+                  <v-list-item-content>
+                    <v-list-item-title>{{getTaskView.name}}</v-list-item-title>
+                  </v-list-item-content>
+                </v-row>
+
+                <v-row no-gutters class="blue lighten-3">{{getTaskView.comments[1].content}}</v-row>
+              </v-col>
+              <v-col cols="3"></v-col>
+            </v-row>
           </div>
         </v-card>
       </v-col>
@@ -42,6 +46,7 @@
 import Todo from "@/components/Todo.vue";
 import AddTodo from "@/components/AddTodo.vue";
 import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "task",
   data() {
@@ -51,8 +56,13 @@ export default {
     Todo,
     AddTodo
   },
+  methods: {},
   computed: {
-    ...mapGetters(["getTaskView"])
+    ...mapGetters(["getTaskView"]),
+    ...mapActions(["fetchTask"]),
+    getTask() {
+      return this.fetchTask();
+    }
   }
 };
 </script>
