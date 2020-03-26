@@ -20,6 +20,15 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+    <v-divider></v-divider>
+    <v-list-item @click="loggout()">
+      <v-list-item-icon>
+        <v-icon>mdi-logout</v-icon>
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title>Logout</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
   </div>
   <div v-else>
     <v-list-item @click="doSomething()" class="px-2">
@@ -62,12 +71,16 @@ export default {
   },
   methods: {
     ...mapActions(["fetchLogged"]),
-    ...mapActions(["setLoginDialog"]),
+    ...mapActions(["setLoginDialog","logout"]),
     doSomething() {
       this.setLoginDialog();
     },
     getUser() {
       this.$router.push('users')
+    },
+    loggout(){
+      this.logout();
+      location.reload();
     }
   },
   mounted: function() {

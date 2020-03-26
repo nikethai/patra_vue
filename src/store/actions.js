@@ -4,27 +4,20 @@ import qs from 'querystring'
 export default {
   async login({ commit }, form) {
     let config = {
-      headers:{
+      headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
     console.log(qs.stringify(form));
     axios
-      .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form),config)
+      .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form), config)
       .then(res => {
-        console.log(res.headers.Authorization);
-        // localStorage.setItem("jwt", res.data.token);
+        // console.log(res.headers.authorization);
+        localStorage.setItem("jwt", res.headers.authorization);
 
-        // if (localStorage.getItem("jwt") != null) {
-        //   this.login(res);
-        //   if (this.$route.params.nextUrl != null) {
-        //     this.$router.push(this.$route.params.nextUrl);
-        //   }
-        //   else {
-        //     this.$refs['modal'].hide()
-        //     this.$router.push('/users');
-        //   }
-        // }
+        if (localStorage.getItem("jwt") != null) {
+          // axios.get(`${process.env.VUE_APP_API_URL}/api/v0/users`)
+        }
 
       })
       .catch(e => console.log(e)); //eslint-disable-line no-console
@@ -42,17 +35,25 @@ export default {
       }
     }
   },
+  async logout({ commit }) {
+    if (localStorage.getItem("jwt") != null) {
+      for (var i = 0; i < localStorage.key("jwt").length; i++) {
+        // use key name to retrieve the corresponding value
+        localStorage.removeItem("jwt");
+        commit("removeUser");
+      }
+    }
+  },
   async fetchTask({ commit }) {
     console.log('hello')
     let task = {};
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/tasks/5e7a3c84e19304306d8df6e9`)
       .then(res => {
-        task = res
+        commit("addTask",res.data)
         console.log(res)
       })
       .catch(e => console.log(e))
-      console.log(task);
     // commit("addTask");
   },
   async addTask({ commit }, newTask) {

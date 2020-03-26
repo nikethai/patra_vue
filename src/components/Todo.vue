@@ -17,7 +17,7 @@
               <span
                 :class="{ 'is-completed': todo.isCompleted }"
                 @click="getTaskInfo(todo)"
-                >{{ todo.name }}</span
+                >{{ todo.taskName }}</span
               >
             </v-list-item-title>
           </v-list-item-content>
