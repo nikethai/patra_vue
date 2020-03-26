@@ -25,19 +25,19 @@
               </v-col>
             </v-row>-->
             <v-flex class="d-flex flex-column" style="text-align: left">
-              <v-card outlined>
+              <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" outlined>
                 <v-row no-gutters>
                   <v-list-item-avatar>
                     <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{getTaskView.comments[0].username}}</v-list-item-title>
+                    <v-list-item-title>{{cmt.username}}</v-list-item-title>
                   </v-list-item-content>
                 </v-row>
 
                 <v-row no-gutters>
                   <v-container>
-                    <p class="text-wrap">{{getTaskView.comments[0].comment}}</p>
+                    <p class="text-wrap">{{cmt.comment}}</p>
                   </v-container>
                 </v-row>
               </v-card>
