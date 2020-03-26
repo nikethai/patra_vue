@@ -8,6 +8,7 @@
           <v-card-text>
             <AddTodo />
             <Todo />
+            <v-btn @click="getTas()" color="success">GetTask</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -56,13 +57,14 @@ export default {
     Todo,
     AddTodo
   },
-  methods: {},
-  computed: {
-    ...mapGetters(["getTaskView"]),
+  methods: {
     ...mapActions(["fetchTask"]),
-    getTask() {
-      return this.fetchTask();
+    getTas() {
+      this.fetchTask();
     }
+  },
+  computed: {
+    ...mapGetters(["getTaskView"])
   }
 };
 </script>

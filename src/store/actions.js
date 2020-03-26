@@ -1,12 +1,18 @@
 import axios from 'axios'
+import qs from 'querystring'
 
 export default {
   async login({ commit }, form) {
-    console.log(form);
+    let config = {
+      headers:{
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    };
+    console.log(qs.stringify(form));
     axios
-      .post(`${process.env.VUE_APP_API_URL_HERO}/api/login`, form)
+      .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form),config)
       .then(res => {
-        console.log(res);
+        console.log(res.headers.Authorization);
         // localStorage.setItem("jwt", res.data.token);
 
         // if (localStorage.getItem("jwt") != null) {
@@ -37,11 +43,13 @@ export default {
     }
   },
   async fetchTask({ commit }) {
+    console.log('hello')
     let task = {};
     axios
-      .get(`${process.env.VUE_APP_API_URL_HERO}/api/v0/tasks/5e7a3c84e19304306d8df6e9`)
+      .get(`${process.env.VUE_APP_API_URL}/api/v0/tasks/5e7a3c84e19304306d8df6e9`)
       .then(res => {
         task = res
+        console.log(res)
       })
       .catch(e => console.log(e))
       console.log(task);
