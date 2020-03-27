@@ -9,15 +9,17 @@
             <v-checkbox
               on-icon="mdi-check-circle"
               off-icon="mdi-checkbox-blank-circle-outline"
-              v-model="todo.isCompleted"
+              v-model="todo.status_id"
+              :true-value="1"
+              :false-value="0"
             ></v-checkbox>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
               <span
-                :class="{ 'is-completed': todo.isCompleted }"
+                :class="{ 'is-completed': todo.status_id }"
                 @click="getTaskInfo(todo)"
-                >{{ todo.name }}</span
+                >{{ todo.taskName }}</span
               >
             </v-list-item-title>
           </v-list-item-content>

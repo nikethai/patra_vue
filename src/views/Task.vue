@@ -1,9 +1,9 @@
 /* eslint-disable */
 <template>
-  <v-container fluid grid-list-md>
+  <v-container fluid>
     <v-row>
-      <v-col cols="md-4" md>
-        <v-card class="mx-auto" shaped>
+      <v-col cols="md-5 nopadding-task grey">
+        <v-card class="mx-auto" flat>
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
             <AddTodo />
@@ -11,30 +11,41 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="md-8" md>
-        <v-card class="mx-auto" shaped>
-          <v-card-title class="justify-center">{{getTaskView.name}}</v-card-title>
-          <div class="overline mb-4">Status: {{getTaskView.isCompleted}}</div>
-          <v-card-text>{{ getTaskView.desc }}</v-card-text>
+      <v-col cols="md-7  nopadding-desc">
+        <v-card class="mx-auto" outlined>
+          <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
+          <v-flex class="d-flex flex-row justify-space-around">
+            <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
+            <v-btn class="overline" color="error" text >Assign</v-btn>
+          </v-flex>
+          <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
           <v-divider></v-divider>
-          <div class="container" v-if="getTaskView.comments && getTaskView.comments.length ">
-            <v-row class="mx-auto grey lighten-5">
-              <v-col cols="3"></v-col>
-              <v-col cols="6" style="text-align: left">
+          <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
+            <h5>Comments</h5>
+            <!-- <v-row class="mx-auto">
+              <v-col cols="12" style="text-align: left">
+                
+              </v-col>
+            </v-row>-->
+            <v-flex class="d-flex flex-column" style="text-align: left">
+              <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" outlined>
                 <v-row no-gutters>
                   <v-list-item-avatar>
                     <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{getTaskView.name}}</v-list-item-title>
+                    <v-list-item-title>{{cmt.username}}</v-list-item-title>
                   </v-list-item-content>
                 </v-row>
 
-                <v-row no-gutters class="blue lighten-3">{{getTaskView.comments[1].content}}</v-row>
-              </v-col>
-              <v-col cols="3"></v-col>
-            </v-row>
-          </div>
+                <v-row no-gutters>
+                  <v-container>
+                    <p class="text-wrap">{{cmt.comment}}</p>
+                  </v-container>
+                </v-row>
+              </v-card>
+            </v-flex>
+          </v-container>
         </v-card>
       </v-col>
     </v-row>
@@ -56,15 +67,32 @@ export default {
     Todo,
     AddTodo
   },
-  methods: {},
-  computed: {
-    ...mapGetters(["getTaskView"]),
+  methods: {
     ...mapActions(["fetchTask"]),
-    getTask() {
-      return this.fetchTask();
+    getTas() {
+      this.fetchTask(this.$route.params.id);
+    },
+    isEmp(obj) {
+      return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
+  },
+  mounted() {
+    this.getTas();
+  },
+  computed: {
+    ...mapGetters(["getTaskView"])
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.nopadding-desc {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.nopadding-task {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-height: 100%;
+}
+</style>
