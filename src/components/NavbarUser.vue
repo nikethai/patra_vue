@@ -1,5 +1,5 @@
 <template>
-  <div id="loggedinDiv" v-if="allUsers.length > 0">
+  <div id="loggedinDiv" v-if="Object.keys(getUserInfo).length > 0">
     <v-list-item @click="getUser()" class="px-2">
       <v-list-item-avatar>
         <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
@@ -87,7 +87,7 @@ export default {
     this.fetchLogged();
   },
   computed: {
-    ...mapGetters(["allUsers"])
+    ...mapGetters(["getUserInfo"])
   }
 };
 </script>

@@ -1,8 +1,11 @@
 export default {
-  addUser: (state, data) => state.logged.push(data),
+  addUser: (state, data) => (state.userInfo = data),
   setUser: (state, logged) => (state.logged = logged),
   removeUser: (state) => (state.logged = []),
+  removeUserInfo: (state) => (state.userInfo = []),
   addTask: (state, newTask) => state.task.push(newTask),
+  setTask: (state, Task) => state.task = Task,
+  addSheet: (state, newSheet) => state.task.push(newSheet),
   setTask: (state, task) => state.task = task,
   deleteTask: (state, delItem) => {
     let task = state.task;

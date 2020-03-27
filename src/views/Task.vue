@@ -1,9 +1,9 @@
 /* eslint-disable */
 <template>
-  <v-container fluid grid-list-md>
+  <v-container fluid>
     <v-row>
-      <v-col cols="md-4" md>
-        <v-card class="mx-auto" shaped>
+      <v-col cols="md-5 nopadding-task grey">
+        <v-card class="mx-auto" flat>
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
             <AddTodo />
@@ -11,10 +11,13 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="md-8" md>
-        <v-card class="mx-auto" shaped>
+      <v-col cols="md-7  nopadding-desc">
+        <v-card class="mx-auto" outlined>
           <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
-          <div class="overline mb-4">Status: {{getTaskView.isCompleted == 0}}</div>
+          <v-flex class="d-flex flex-row justify-space-around">
+            <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
+            <v-btn class="overline" color="error" text >Assign</v-btn>
+          </v-flex>
           <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
           <v-divider></v-divider>
           <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
@@ -67,10 +70,13 @@ export default {
   methods: {
     ...mapActions(["fetchTask"]),
     getTas() {
-      this.fetchTask();
+      this.fetchTask(this.$route.params.id);
+    },
+    isEmp(obj) {
+      return Object.keys(obj).length === 0 && obj.constructor === Object;
     }
   },
-  mounted(){
+  mounted() {
     this.getTas();
   },
   computed: {
@@ -79,4 +85,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.nopadding-desc {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.nopadding-task {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-height: 100%;
+}
+</style>

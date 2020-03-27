@@ -35,7 +35,13 @@
                 </v-list-item-content>
               </v-col>
               <v-col cols="12" md="6">
-                <v-btn style="pointer-events: none" outlined text color="purple lighten-3" large>ABC@gmail.com</v-btn>
+                <v-btn
+                  style="pointer-events: none"
+                  outlined
+                  text
+                  color="purple lighten-3"
+                  large
+                >ABC@gmail.com</v-btn>
               </v-col>
               <v-col cols="12" md="6">
                 <v-list-item-content>
@@ -68,7 +74,7 @@ export default {
       tab: null
     };
   },
-  computed: mapGetters(["allUsers"])
+  computed: { ...mapGetters(["getUserInfo"]) }
 };
 </script>
 <style scoped>

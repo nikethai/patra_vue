@@ -41,7 +41,7 @@ const router = new Router({
         import(/* webpackChunkName: "about" */ "./views/Corona.vue")
     },
     {
-      path: "/task",
+      path: "/task/:id",
       name: "task",
       meta: {
         title: "Task"
