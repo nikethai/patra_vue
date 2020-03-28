@@ -3,8 +3,8 @@
     <v-btn color="info" text>CheckList</v-btn>
     <v-row>
       <v-col v-for="sheet in allSheet" :key="sheet.id" cols="12" md="4">
-        <v-card @click="doSomething">
-          <v-btn text color="success">{{sheet.name}}</v-btn>
+        <v-card @click="doSomething(sheet.sheetId)">
+          <v-btn text color="success">{{sheet.sheetName}}</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import {mapActions} from 'vuex'
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -22,22 +22,26 @@ export default {
   },
   methods: {
     ...mapActions(["fetchSheet"]),
-    doSomething() {
-      this.$router.push({ path: `/task/${1}` });
+    doSomething(id) {
+      this.$router.push({ path: `/task/${id}` });
     },
-    fetch_sh(){
-      let info = localStorage.getItem("user_info");
-      if (info != null){
-        info = JSON.parse(info);
-        // this.fetchSheet(info.currMemberId);
-        this.fetchSheet("5e78ed4a8af9f46f8f6bb6de");
+    fetch_sh() {
+      // let info = localStorage.getItem("user_info");
+      let memInfo = localStorage.getItem("mem_info");
+      // if (info != null) {
+      // info = JSON.parse(info);
+      if (memInfo != null) {
+        memInfo = JSON.parse(memInfo);
+        this.fetchSheet(memInfo.orgId);
+        // this.fetchSheet("5e78ed4a8af9f46f8f6bb6de");
+        // }
       }
     }
   },
-  mounted(){
+  mounted() {
     this.fetch_sh();
   },
-  computed:{
+  computed: {
     ...mapGetters(["allSheet"])
   }
 };

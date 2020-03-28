@@ -5,7 +5,7 @@ export default {
   removeUserInfo: (state) => (state.userInfo = []),
   addTask: (state, newTask) => state.task.push(newTask),
   setTask: (state, Task) => state.task = Task,
-  addSheet: (state, newSheet) => state.task.push(newSheet),
+  addSheet: (state, Sheet) => state.sheet = Sheet,
   setTask: (state, task) => state.task = task,
   deleteTask: (state, delItem) => {
     let task = state.task;

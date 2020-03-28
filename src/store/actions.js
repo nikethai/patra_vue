@@ -24,7 +24,14 @@ export default {
               }
             })
             .then(res => {
-              console.log('User data: ', res);
+              console.log('User data: ', res.data);
+              axios
+                .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${res.data.currMemberId}`)
+                .then(res => {
+                  console.log(res.data);
+                  localStorage.setItem('mem_info',JSON.stringify(res.data));
+                })
+                .catch(e => console.log(e));
               localStorage.setItem('user_info', JSON.stringify(res.data));
             })
             .catch(e => console.log(e));//eslint-disable
@@ -39,12 +46,19 @@ export default {
 
       // use key name to retrieve the corresponding value
       let value = localStorage.getItem("user_info");
+      let objValue = JSON.parse(value);
+
 
       // console.log the iteration key and value
-      console.log("Value: "+ JSON.parse(value));
-      commit("addUser", JSON.parse(value));
+      console.log("Value: " + objValue.currMemberId);
+      commit("addUser", objValue);
 
     }
+  },
+  async getUserToAssign({ commit }, orgID) {
+
+
+
   },
   async logout({ commit }) {
     if (localStorage.getItem("jwt") != null) {
@@ -56,7 +70,7 @@ export default {
     commit("removeUser");
     commit("removeUserInfo");
   },
-  async fetchTask({ commit },sheet_id) {
+  async fetchTask({ commit }, sheet_id) {
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheet_id}/tasks`)
       .then(res => {
@@ -65,10 +79,10 @@ export default {
       .catch(e => console.log(e))//eslint-disable
     // commit("addTask");
   },
-  async fetchSheet({ commit },orgID) {
+  async fetchSheet({ commit }, orgID) {
     console.log('hello sheet')
     axios
-      .get(`${process.env.VUE_APP_API_URL}/http://localhost:8081/api/v0/sheets/byOrg/${orgID}`)
+      .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/byOrg/${orgID}`)
       .then(res => {
         commit("addSheet", res.data)
       })
