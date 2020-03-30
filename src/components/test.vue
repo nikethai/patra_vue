@@ -6,7 +6,7 @@
       <v-spacer />
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer app v-model="drawer">
       <v-list dense>
         <v-list-item @click.stop="left = !left">
           <v-list-item-action>
@@ -19,12 +19,12 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-navigation-drawer v-model="left" fixed temporary />
+    <v-navigation-drawer fixed temporary v-model="left" />
 
     <v-content>
       <v-container class="fill-height" fluid>
-        <v-row justify="center" align="center">
-          <v-col class="shrink"> </v-col>
+        <v-row align="center" justify="center">
+          <v-col class="shrink"></v-col>
         </v-row>
       </v-container>
     </v-content>

@@ -1,6 +1,6 @@
 {
   "name": "patra",
-  "version": "0.1.0",
+  "version": "0.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -21,9 +21,9 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.1",
-    "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^4.2.3",
     "@vue/cli-plugin-pwa": "^4.2.3",
-    "@vue/cli-service": "^3.12.1",
+    "@vue/cli-service": "^4.2.3",
     "@vue/eslint-config-prettier": "^4.0.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
@@ -43,7 +43,10 @@
       "plugin:vue/essential",
       "@vue/prettier"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": "warn"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

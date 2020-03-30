@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <v-container fluid>
     <v-row>
@@ -13,12 +12,18 @@
       </v-col>
       <v-col cols="md-7  nopadding-desc">
         <v-card class="mx-auto" outlined>
-          <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
+          <v-card-title class="justify-center">{{
+            getTaskView.taskName
+          }}</v-card-title>
           <v-flex class="d-flex flex-row justify-space-around">
-            <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
-            <v-dialog v-model="dialog" persistent max-width="500px">
-              <template v-slot:activator="{on}">
-                <v-btn v-on="on" class="overline" color="error" text>Assign</v-btn>
+            <div class="overline mb-0">
+              Status: {{ getTaskView.status_id === 0 }}
+            </div>
+            <v-dialog max-width="500px" persistent v-model="dialog">
+              <template v-slot:activator="{ on }">
+                <v-btn class="overline" color="error" text v-on="on"
+                  >Assign</v-btn
+                >
               </template>
               <v-card>
                 <v-card-title>
@@ -27,50 +32,64 @@
                 <v-card-text>
                   <v-container>
                     <v-combobox
-                      v-model="select"
-                      label="Select user to assign"
-                      chips
-                      multiple
-                      item-text="username"
-                      return-object
                       :items="items"
+                      chips
+                      item-text="username"
+                      label="Select user to assign"
+                      multiple
+                      return-object
+                      v-model="select"
                     ></v-combobox>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                  <v-btn color="blue darken-1" text @click="assign()">Save</v-btn>
+                  <v-btn @click="dialog = false" color="blue darken-1" text
+                    >Close</v-btn
+                  >
+                  <v-btn @click="assign()" color="blue darken-1" text
+                    >Save</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <span v-if="select.length">
-              <p v-for="usr in select" :key="usr.memberId">{{usr.username}}</p>
-            </span>
+            <div v-if="select.length">
+              <p :key="usr.memberId" v-for="usr in select">
+                {{ usr.username }}
+              </p>
+            </div>
           </v-flex>
           <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
           <v-divider></v-divider>
-          <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
+          <v-container
+            v-if="getTaskView.comments && getTaskView.comments.length"
+          >
             <h5>Comments</h5>
             <!-- <v-row class="mx-auto">
-              <v-col cols="12" style="text-align: left">
-                
-              </v-col>
-            </v-row>-->
+                          <v-col cols="12" style="text-align: left">
+                            
+                          </v-col>
+                        </v-row>-->
             <v-flex class="d-flex flex-column" style="text-align: left">
-              <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" outlined>
+              <v-card
+                :key="cmt.id"
+                outlined
+                v-for="cmt in getTaskView.comments"
+              >
                 <v-row no-gutters>
                   <v-list-item-avatar>
-                    <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
+                    <v-img
+                      src="https://randomuser.me/api/portraits/men/85.jpg"
+                    />
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{cmt.username}}</v-list-item-title>
+                    <v-list-item-title>{{ cmt.username }}</v-list-item-title>
                   </v-list-item-content>
                 </v-row>
 
                 <v-row no-gutters>
                   <v-container>
-                    <p class="text-wrap">{{cmt.comment}}</p>
+                    <p class="text-wrap">{{ cmt.comment }}</p>
                   </v-container>
                 </v-row>
               </v-card>
@@ -86,8 +105,7 @@
 // @ is an alias to /src
 import Todo from "@/components/Todo.vue";
 import AddTodo from "@/components/AddTodo.vue";
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
@@ -120,7 +138,9 @@ export default {
         mem = JSON.parse(mem);
         axios
           .get(
-            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`
+            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${
+              mem.orgId
+            }/members`
           )
           .then(res => {
             // let stringarr = res.data.map(item => {
@@ -148,6 +168,7 @@ export default {
   margin: 0 !important;
   padding: 0 !important;
 }
+
 .nopadding-task {
   margin: 0 !important;
   padding: 0 !important;

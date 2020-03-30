@@ -1,45 +1,58 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="isLoginPressed" persistent max-width="600px">
+    <v-dialog max-width="600px" persistent v-model="isLoginPressed">
       <v-card>
         <v-card-title>
           <span class="headline">Login</span>
         </v-card-title>
-        <p v-if="errors.length">
+        <div v-if="errors.length">
           <b>Please correct the following error(s):</b>
           <ul>
             <b-alert show variant="danger">
-              <li v-for="error in errors" :key="error">{{ error }}</li>
+              <li :key="error" v-for="error in errors">{{ error }}</li>
             </b-alert>
           </ul>
-        </p>
-        
+        </div>
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field v-model="username" label="Username" required></v-text-field>
+              <v-text-field
+                label="Username"
+                required
+                v-model="username"
+              ></v-text-field>
             </v-row>
             <v-row>
-              <v-text-field v-model="password" label="Password" required></v-text-field>
+              <v-text-field
+                label="Password"
+                required
+                v-model="password"
+              ></v-text-field>
             </v-row>
           </v-container>
         </v-card-text>
         <span>
           Don't have an account?
-          <v-btn small color="warning" @click="registerIsPressed()">Register!</v-btn>
+          <v-btn @click="registerIsPressed()" color="warning" small
+            >Register!</v-btn
+          >
         </span>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed color="error" @click="loginIsPressed()">Cancel</v-btn>
-          <v-btn depressed color="primary" @click="dialog = logg()">Login</v-btn>
+          <v-btn @click="loginIsPressed()" color="error" depressed
+            >Cancel
+          </v-btn>
+          <v-btn @click="dialog = logg()" color="primary" depressed
+            >Login
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-row>
 </template>
 <script>
-import { mapActions } from "vuex";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   data: () => ({
     username: "",

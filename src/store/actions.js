@@ -1,16 +1,20 @@
-import axios from 'axios'
-import qs from 'querystring'
+import axios from "axios";
+import qs from "querystring";
 
 export default {
   async login({ commit }, form) {
-    let config_urlencode = {
+    let contentTypeHeader = {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     };
     console.log(qs.stringify(form));
     axios
-      .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form), config_urlencode)
+      .post(
+        `${process.env.VUE_APP_API_URL}/api/login`,
+        qs.stringify(form),
+        contentTypeHeader
+      )
       .then(res => {
         // console.log(res.headers.authorization);
         localStorage.setItem("jwt", res.headers.authorization);
@@ -20,46 +24,42 @@ export default {
           axios
             .get(`${process.env.VUE_APP_API_URL}/api/v0/users`, {
               headers: {
-                'Authorization': `Bearer ${jwt}`
+                Authorization: `Bearer ${jwt}`
               }
             })
             .then(res => {
-              console.log('User data: ', res.data);
+              console.log("User data: ", res.data);
               axios
-                .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${res.data.currMemberId}`)
+                .get(
+                  `${process.env.VUE_APP_API_URL}/api/v0/members/${
+                    res.data.currMemberId
+                  }`
+                )
                 .then(res => {
                   console.log(res.data);
-                  localStorage.setItem('mem_info',JSON.stringify(res.data));
+                  localStorage.setItem("mem_info", JSON.stringify(res.data));
                 })
                 .catch(e => console.log(e));
-              localStorage.setItem('user_info', JSON.stringify(res.data));
+              localStorage.setItem("user_info", JSON.stringify(res.data));
             })
-            .catch(e => console.log(e));//eslint-disable
+            .catch(e => console.log(e));
         }
-
       })
-      .catch(e => console.log(e)); //eslint-disable-line no-console
+      .catch(e => console.log(e));
     // commit("addUser", resp.data);
   },
   async fetchLogged({ commit }) {
     if (localStorage.getItem("user_info") != null) {
-
       // use key name to retrieve the corresponding value
       let value = localStorage.getItem("user_info");
       let objValue = JSON.parse(value);
 
-
       // console.log the iteration key and value
       console.log("Value: " + objValue.currMemberId);
       commit("addUser", objValue);
-
     }
   },
-  async getUserToAssign({ commit }, orgID) {
-
-
-
-  },
+  async getUserToAssign({ commit }, orgID) {},
   async logout({ commit }) {
     if (localStorage.getItem("jwt") != null) {
       localStorage.removeItem("jwt");
@@ -74,19 +74,19 @@ export default {
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheet_id}/tasks`)
       .then(res => {
-        commit("setTask", res.data)
+        commit("setTask", res.data);
       })
-      .catch(e => console.log(e))//eslint-disable
+      .catch(e => console.log(e));
     // commit("addTask");
   },
   async fetchSheet({ commit }, orgID) {
-    console.log('hello sheet')
+    console.log("hello sheet");
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/byOrg/${orgID}`)
       .then(res => {
-        commit("addSheet", res.data)
+        commit("addSheet", res.data);
       })
-      .catch(e => console.log(e))//eslint-disable
+      .catch(e => console.log(e));
     // commit("addTask");
   },
   async addTask({ commit }, newTask) {
@@ -104,5 +104,5 @@ export default {
   },
   async setRegisterDialog({ commit }) {
     commit("setRegisterDialog");
-  },
+  }
 };

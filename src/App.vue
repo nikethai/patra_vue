@@ -1,20 +1,20 @@
 <template>
   <v-app class="v-app">
     <v-app-bar
-      disable-route-watcher
-      disable-resize-watcher="true"
-      class="nav-bar"
       :collapse="!collapseOnScroll"
       :collapse-on-scroll="collapseOnScroll"
       app
+      class="nav-bar"
       color="accent"
       dense
+      disable-resize-watcher="true"
+      disable-route-watcher
       flat
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="patr">Patra</v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer app v-model="drawer">
       <NavbarUser />
     </v-navigation-drawer>
     <v-content>
@@ -53,6 +53,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
 .nav-bar {
   margin-bottom: 30px;
   background: rgb(216, 228, 235);
@@ -74,6 +75,7 @@ export default {
 .nav-bar a.router-link-exact-active {
   color: #42b983;
 }
+
 .patr {
   color: #42b983;
 }
