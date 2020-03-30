@@ -1,13 +1,12 @@
-/* eslint-disable */
 <template>
   <v-container fluid>
-    <v-tabs centered v-model="tab" background-color="blue lighten-3" dark>
+    <v-tabs background-color="blue lighten-3" centered dark v-model="tab">
       <v-tab>Profile</v-tab>
       <v-tab>Organizations</v-tab>
       <v-tabs-items v-model="tab">
         <v-tab-item>
           <v-card flat>
-            <v-row class="mx-auto grey lighten-4" align-center>
+            <v-row align-center class="mx-auto grey lighten-4">
               <v-col cols="12" md="6">
                 <v-list-item-content>
                   <v-list-item-title>Photo</v-list-item-title>
@@ -18,7 +17,7 @@
                   <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
                 </v-list-item-avatar>
                 <v-list-item-action>
-                  <v-btn outlined color="grey" dark>Change</v-btn>
+                  <v-btn color="grey" dark outlined>Change</v-btn>
                 </v-list-item-action>
               </v-col>
               <v-col cols="12" md="6">
@@ -27,7 +26,7 @@
                 </v-list-item-content>
               </v-col>
               <v-col cols="12" md="6">
-                <v-btn color="error" text outlined>Reset Password?</v-btn>
+                <v-btn color="error" outlined text>Reset Password?</v-btn>
               </v-col>
               <v-col cols="12" md="6">
                 <v-list-item-content>
@@ -36,12 +35,13 @@
               </v-col>
               <v-col cols="12" md="6">
                 <v-btn
-                  style="pointer-events: none"
-                  outlined
-                  text
                   color="purple lighten-3"
                   large
-                >ABC@gmail.com</v-btn>
+                  outlined
+                  style="pointer-events: none"
+                  text
+                  >ABC@gmail.com
+                </v-btn>
               </v-col>
               <v-col cols="12" md="6">
                 <v-list-item-content>

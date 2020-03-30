@@ -10,7 +10,7 @@
 
     <v-divider></v-divider>
     <v-list dense nav>
-      <v-list-item v-for="link in item" :key="link.name" :to="link.link" link>
+      <v-list-item :key="link.name" :to="link.link" link v-for="link in item">
         <v-list-item-icon>
           <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-icon>
@@ -45,8 +45,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 // import loginNavbar from "@/components/loginNavbar.vue";
 import loginNavbarVuetify from "@/components/loginNavbarVuetify.vue";
 // import registerNavbar from "@/components/registerNavbar.vue";
@@ -66,19 +65,19 @@ export default {
   components: {
     // loginNavbar,
     loginNavbarVuetify,
-    registerNavbarVuetify,
+    registerNavbarVuetify
     // registerNavbar
   },
   methods: {
     ...mapActions(["fetchLogged"]),
-    ...mapActions(["setLoginDialog","logout"]),
+    ...mapActions(["setLoginDialog", "logout"]),
     doSomething() {
       this.setLoginDialog();
     },
     getUser() {
-      this.$router.push('users')
+      this.$router.push("users");
     },
-    loggout(){
+    loggout() {
       this.logout();
       location.reload();
     }
@@ -92,4 +91,4 @@ export default {
 };
 </script>
 
-<style scope></style>
+<style scoped></style>

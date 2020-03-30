@@ -5,23 +5,16 @@ import {qsHelp} from '@/util/qsHelper'
 export default {
   async fetchLogged({ commit }) {
     if (localStorage.getItem("user_info") != null) {
-
       // use key name to retrieve the corresponding value
       let value = localStorage.getItem("user_info");
       let objValue = JSON.parse(value);
 
-
       // console.log the iteration key and value
       console.log("Value: " + objValue.currMemberId);
       commit("addUser", objValue);
-
     }
   },
-  async getUserToAssign({ commit }, orgID) {
-
-
-
-  },
+  async getUserToAssign({ commit }, orgID) {},
   async logout({ commit }) {
     if (localStorage.getItem("jwt") != null) {
       localStorage.removeItem("jwt");
@@ -39,19 +32,19 @@ export default {
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheet_id}/tasks`)
       .then(res => {
-        commit("setTask", res.data)
+        commit("setTask", res.data);
       })
-      .catch(e => console.log(e))//eslint-disable
+      .catch(e => console.log(e));
     // commit("addTask");
   },
   async fetchSheet({ commit }, orgID) {
-    console.log('hello sheet')
+    console.log("hello sheet");
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/byOrg/${orgID}`)
       .then(res => {
-        commit("addSheet", res.data)
+        commit("addSheet", res.data);
       })
-      .catch(e => console.log(e))//eslint-disable
+      .catch(e => console.log(e));
     // commit("addTask");
   },
   async getMemActions({ commit, state }) {
@@ -90,5 +83,5 @@ export default {
   },
   async setRegisterDialog({ commit }) {
     commit("setRegisterDialog");
-  },
+  }
 };

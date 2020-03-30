@@ -2,9 +2,9 @@
   <v-container fluid>
     <v-btn color="info" text>CheckList</v-btn>
     <v-row>
-      <v-col v-for="sheet in allSheet" :key="sheet.id" cols="12" md="4">
+      <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
         <v-card @click="doSomething(sheet.sheetId)">
-          <v-btn text color="success">{{sheet.sheetName}}</v-btn>
+          <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
         </v-card>
       </v-col>
     </v-row>
@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Home",

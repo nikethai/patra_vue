@@ -1,11 +1,10 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
-Vue.use(Vuex);
-
 import actions from "../src/store/actions";
 import mutations from "../src/store/mutations";
 import getters from "../src/store/getters";
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -13,7 +12,7 @@ export default new Vuex.Store({
     userInfo:{},
     mem:[],
     task: [],
-    sheet:[],
+    sheet: [],
     viewTask: {},
     loginDialog: false,
     registerDialog: false,

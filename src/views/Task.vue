@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <v-container fluid>
     <v-row>
@@ -67,6 +66,7 @@ export default {
   margin: 0 !important;
   padding: 0 !important;
 }
+
 .nopadding-task {
   margin: 0 !important;
   padding: 0 !important;

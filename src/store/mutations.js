@@ -8,7 +8,7 @@ export default {
   getTask: (state, task) => (state.viewTask = task),
   deleteTask: (state, delItem) => {
     let task = state.task;
-    task.splice(task.findIndex(i => i.id == delItem), 1);
+    task.splice(task.findIndex(i => i.id === delItem), 1);
   },
   addSheet: (state, Sheet) => state.sheet = Sheet,
   addMem: (state,mem) => state.mem = mem,
