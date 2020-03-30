@@ -49,13 +49,13 @@ export default {
     ...mapGetters(["allTask"])
   },
   methods: {
-    ...mapActions(["delTask"]),
-    ...mapActions(["getTask"]),
+    ...mapActions(["delTask","getTask","getMemActions"]),
     deleteTask(id) {
       this.delTask(id);
     },
     getTaskInfo(task) {
       this.getTask(task);
+      this.getMemActions();
     }
   }
 };

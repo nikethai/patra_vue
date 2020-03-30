@@ -1,46 +1,8 @@
 import axios from 'axios'
 import qs from 'querystring'
+import {qsHelp} from '@/util/qsHelper'
 
 export default {
-  async login({ commit }, form) {
-    let config_urlencode = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-    console.log(qs.stringify(form));
-    axios
-      .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form), config_urlencode)
-      .then(res => {
-        // console.log(res.headers.authorization);
-        localStorage.setItem("jwt", res.headers.authorization);
-        let jwt = localStorage.getItem("jwt");
-
-        if (jwt != null) {
-          axios
-            .get(`${process.env.VUE_APP_API_URL}/api/v0/users`, {
-              headers: {
-                'Authorization': `Bearer ${jwt}`
-              }
-            })
-            .then(res => {
-              console.log('User data: ', res.data);
-              axios
-                .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${res.data.currMemberId}`)
-                .then(res => {
-                  console.log(res.data);
-                  localStorage.setItem('mem_info',JSON.stringify(res.data));
-                })
-                .catch(e => console.log(e));
-              localStorage.setItem('user_info', JSON.stringify(res.data));
-            })
-            .catch(e => console.log(e));//eslint-disable
-        }
-
-      })
-      .catch(e => console.log(e)); //eslint-disable-line no-console
-    // commit("addUser", resp.data);
-  },
   async fetchLogged({ commit }) {
     if (localStorage.getItem("user_info") != null) {
 
@@ -67,6 +29,9 @@ export default {
     if (localStorage.getItem("user_info") != null) {
       localStorage.removeItem("user_info");
     }
+    if (localStorage.getItem("mem_info") != null) {
+      localStorage.removeItem("mem_info");
+    }
     commit("removeUser");
     commit("removeUserInfo");
   },
@@ -88,6 +53,27 @@ export default {
       })
       .catch(e => console.log(e))//eslint-disable
     // commit("addTask");
+  },
+  async getMemActions({ commit, state }) {
+    const tsk = state.viewTask;
+
+    let memarr = [];
+    let assi = tsk.assignee;
+    let params = {};
+    if (assi != null && Object.keys(assi).length > 0) {
+      params = { memberIDs: [...assi] };
+    }
+    if (params != null && Object.keys(params).length > 0) {
+      axios
+        .get(
+          `${process.env.VUE_APP_API_URL}/api/v0/members/?${qsHelp(params)}`
+        )
+        .then(res => {
+          commit("addMem", res.data);
+        })
+        .catch(e => console.log(e));
+    }
+    // commit("addMem", mem);
   },
   async addTask({ commit }, newTask) {
     commit("addTask", newTask);

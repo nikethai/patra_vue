@@ -11,6 +11,7 @@ export default new Vuex.Store({
   state: {
     logged: {},
     userInfo:{},
+    mem:[],
     task: [],
     sheet:[],
     viewTask: {},

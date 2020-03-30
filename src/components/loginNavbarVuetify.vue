@@ -13,7 +13,7 @@
             </b-alert>
           </ul>
         </p>
-        
+
         <v-card-text>
           <v-container>
             <v-row>
@@ -33,6 +33,10 @@
           <v-btn depressed color="error" @click="loginIsPressed()">Cancel</v-btn>
           <v-btn depressed color="primary" @click="dialog = logg()">Login</v-btn>
         </v-card-actions>
+        <v-snackbar v-model="snackbar">
+          Login successfully!
+          <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-card>
     </v-dialog>
   </v-row>
@@ -40,10 +44,13 @@
 <script>
 import { mapActions } from "vuex";
 import { mapGetters } from "vuex";
+import helper from "@/util/fetchHelper.js";
+
 export default {
   data: () => ({
     username: "",
     password: "",
+    snackbar: false,
     errors: []
   }),
   methods: {
@@ -55,16 +62,49 @@ export default {
     loginIsPressed() {
       this.setLoginDialog();
     },
-    logg() {
+    async logg() {
+      this.errors = [];
       if (this.username && this.password) {
+        let userInfoResp;
+        let memInfoResp;
         let data = {
           username: this.username,
           password: this.password
         };
-        this.login(data);
+        let loginResp = await helper.loginHelp(data);
+        console.log(loginResp);
+        if (loginResp.status === 200) {
+          localStorage.setItem("jwt", loginResp.headers.authorization);
+          let jwt = localStorage.getItem("jwt");
+          userInfoResp = await helper.userInfoHelp(jwt);
+          if (userInfoResp.status === 200) {
+            localStorage.setItem(
+              "user_info",
+              JSON.stringify(userInfoResp.data)
+            );
+            memInfoResp = await helper.memInfoHelp(
+              userInfoResp.data.currMemberId
+            );
+            if (memInfoResp.status === 200) {
+              localStorage.setItem(
+                "mem_info",
+                JSON.stringify(memInfoResp.data)
+              );
+              this.setLoginDialog();
+              this.snackbar = true;
+              location.reload();
+            } else {
+              this.errors.push("Can not get info!");
+            }
+          } else {
+            this.errors.push("Can not get user info!");
+          }
+        } else {
+          this.errors.push(
+            "Login failed! Please check your username and password"
+          );
+        }
       }
-
-      this.errors = [];
 
       if (!this.username) {
         this.errors.push("Name required.");

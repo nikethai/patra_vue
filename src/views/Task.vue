@@ -2,7 +2,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="md-5 nopadding-task grey">
+      <v-col :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey':'md-12 nopadding-task grey'">
         <v-card class="mx-auto" flat>
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
@@ -11,72 +11,8 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="md-7  nopadding-desc">
-        <v-card class="mx-auto" outlined>
-          <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
-          <v-flex class="d-flex flex-row justify-space-around">
-            <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
-            <v-dialog v-model="dialog" persistent max-width="500px">
-              <template v-slot:activator="{on}">
-                <v-btn v-on="on" class="overline" color="error" text>Assign</v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">User Assign</span>
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-combobox
-                      v-model="select"
-                      label="Select user to assign"
-                      chips
-                      multiple
-                      item-text="username"
-                      return-object
-                      :items="items"
-                    ></v-combobox>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                  <v-btn color="blue darken-1" text @click="assign()">Save</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <span v-if="select.length">
-              <p v-for="usr in select" :key="usr.memberId">{{usr.username}}</p>
-            </span>
-          </v-flex>
-          <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
-          <v-divider></v-divider>
-          <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
-            <h5>Comments</h5>
-            <!-- <v-row class="mx-auto">
-              <v-col cols="12" style="text-align: left">
-                
-              </v-col>
-            </v-row>-->
-            <v-flex class="d-flex flex-column" style="text-align: left">
-              <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" outlined>
-                <v-row no-gutters>
-                  <v-list-item-avatar>
-                    <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title>{{cmt.username}}</v-list-item-title>
-                  </v-list-item-content>
-                </v-row>
-
-                <v-row no-gutters>
-                  <v-container>
-                    <p class="text-wrap">{{cmt.comment}}</p>
-                  </v-container>
-                </v-row>
-              </v-card>
-            </v-flex>
-          </v-container>
-        </v-card>
+      <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
+        <TodoDescription />
       </v-col>
     </v-row>
   </v-container>
@@ -86,9 +22,10 @@
 // @ is an alias to /src
 import Todo from "@/components/Todo.vue";
 import AddTodo from "@/components/AddTodo.vue";
+import TodoDescription from "@/components/TodoDescription.vue";
+import axios from "axios";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
-import axios from "axios";
 
 export default {
   name: "task",
@@ -101,44 +38,26 @@ export default {
   },
   components: {
     Todo,
-    AddTodo
+    AddTodo,
+    TodoDescription
   },
   methods: {
-    ...mapActions(["fetchTask"]),
+    ...mapActions(["fetchTask", "getMemActions"]),
     getTas() {
       this.fetchTask(this.$route.params.id);
     },
     isEmp(obj) {
-      return Object.keys(obj).length === 0 && obj.constructor === Object;
+      return obj != null &&  Object.keys(obj).length === 0 && obj.constructor === Object;
     },
     assign() {
       this.dialog = false;
     },
-    getUserFromOrgID() {
-      let mem = localStorage.getItem("mem_info");
-      if (mem != null) {
-        mem = JSON.parse(mem);
-        axios
-          .get(
-            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`
-          )
-          .then(res => {
-            // let stringarr = res.data.map(item => {
-            //   return item["username"];
-            // });
-            // console.log(stringarr);
-            this.items = res.data;
-          })
-          .catch(e => console.log(e));
-      }
-    }
   },
   mounted() {
     this.getTas();
-    this.getUserFromOrgID();
   },
-  computed: {
-    ...mapGetters(["getTaskView"])
+  asyncComputed: {
+    ...mapGetters(["getTaskView"]),
   }
 };
 </script>
