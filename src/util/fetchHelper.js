@@ -36,6 +36,18 @@ export default {
             .then(res => res)
             .catch(e => e);//eslint-disable
 
+    },
+    async registerHelp(form) {
+        let config_urlencode = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        // console.log(qs.stringify(form));
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/users`, form)
+            .then(res => res)
+            .catch(e => e); //eslint-disable-line no-console
     }
 
 }
