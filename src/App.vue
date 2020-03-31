@@ -1,8 +1,6 @@
 <template>
   <v-app class="v-app">
     <v-app-bar
-      :collapse="!collapseOnScroll"
-      :collapse-on-scroll="collapseOnScroll"
       app
       class="nav-bar"
       color="accent"
@@ -30,7 +28,7 @@
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
 import Test from "@/components/test.vue";
-import {mapGetters} from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -39,7 +37,6 @@ export default {
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
-    collapseOnScroll: true,
     drawer: false
   }),
   methods: {
@@ -47,7 +44,20 @@ export default {
       // alert("Yo");
     }
   },
-  computed:{
+  mounted() {
+    console.log(
+      `%c ________________________________________
+< moooooooooooooooooooooooooooooooooconcu >
+ ----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`,
+      "font-family:monospace"
+    );
+  },
+  computed: {
     ...mapGetters(["isSnackbar"])
   }
 };

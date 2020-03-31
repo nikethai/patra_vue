@@ -1,17 +1,19 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey':'md-12 nopadding-task grey'">
+      <v-col
+        :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-4':'md-12 nopadding-task'"
+      >
         <v-card class="mx-auto" flat>
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
             <AddTodo />
-            <Todo />
+            <Todo @refresh="getTas()"/>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
-        <TodoDescription />
+        <TodoDescription/>
       </v-col>
     </v-row>
   </v-container>
@@ -46,17 +48,21 @@ export default {
       this.fetchTask(this.$route.params.id);
     },
     isEmp(obj) {
-      return obj != null &&  Object.keys(obj).length === 0 && obj.constructor === Object;
+      return (
+        obj != null &&
+        Object.keys(obj).length === 0 &&
+        obj.constructor === Object
+      );
     },
     assign() {
       this.dialog = false;
-    },
+    }
   },
   mounted() {
     this.getTas();
   },
   asyncComputed: {
-    ...mapGetters(["getTaskView"]),
+    ...mapGetters(["getTaskView"])
   }
 };
 </script>

@@ -27,7 +27,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="assign()">Save</v-btn>
+            <v-btn color="blue darken-1" text @click="assign()">Assign</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -49,7 +49,7 @@
         class="d-flex flex-column"
         style="text-align: left"
       >
-        <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" outlined>
+        <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" tile>
           <v-row no-gutters>
             <v-list-item-avatar>
               <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
@@ -73,6 +73,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "tododescription",
@@ -101,20 +102,37 @@ export default {
           .catch(e => console.log(e));
       }
     },
-    assign() {
+    async assign() {
       this.dialog = false;
+      let taskID = this.getTaskView.taskId;
+      let assigneeSelected = this.getMem;
+      let assignResp = await helper.assignHelper(taskID, assigneeSelected);
+      if (assignResp.status === 200) {
+        this.$store.dispatch("setSnackbar", {
+          status: true,
+          message: "Assign Successfully!"
+        });
+      } else {
+        this.$store.dispatch("setSnackbar", {
+          status: true,
+          message: "Assign Failed!"
+        });
+      }
     }
   },
   mounted() {
     this.getUserFromOrgID();
   },
   computed: {
-    ...mapGetters(["getTaskView"]),
+    ...mapGetters(["getTaskView", "getMem"]),
     getUsrFr: {
       get() {
-        return this.$store.getters.getMem;
+        return this.getMem;
       },
-      set() {}
+      set(value) {
+        console.log("select value: ", value);
+        this.$store.dispatch("setMems", value);
+      }
     }
   }
 };

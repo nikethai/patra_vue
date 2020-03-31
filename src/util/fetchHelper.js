@@ -48,6 +48,29 @@ export default {
             .post(`${process.env.VUE_APP_API_URL}/api/v0/users`, form)
             .then(res => res)
             .catch(e => e); //eslint-disable-line no-console
-    }
+    },
+    async assignHelper(taskId, selectedMem) {
+        let selectedMemID = [];
+        let config = {};
+        let jwt = localStorage.getItem("jwt");
+        if (taskId != null && selectedMem != null && jwt != null) {
+            config = {
+                headers: {
+                    'Authorization': `Bearer ${jwt}`
+                }
+            }
+            selectedMemID = selectedMem.map(x => x.memberId);
+            let params = {
+                memberIds: [...selectedMemID]
+            };
+            let stringParam = qs.stringify(params, { arrayFormat: 'repeat' });
+            return axios
+                .patch(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/assignees?${stringParam}`, null, config)
+                .then(res => res)
+                .catch(e => e);//eslint-disable
 
+        }
+
+
+    },
 }

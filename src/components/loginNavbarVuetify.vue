@@ -119,13 +119,8 @@ export default {
             "Login failed! Please check your username and password"
           );
         }
-      }
-
-      if (!this.username) {
-        this.errors.push("Name required.");
-      }
-      if (!this.password) {
-        this.errors.push("Password required.");
+        this.username = "";
+        this.password = "";
       }
     }
   },
