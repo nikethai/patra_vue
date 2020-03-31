@@ -28,7 +28,7 @@
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
 import Test from "@/components/test.vue";
-import {mapGetters} from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -44,7 +44,20 @@ export default {
       // alert("Yo");
     }
   },
-  computed:{
+  mounted() {
+    console.log(
+      `%c ________________________________________
+< moooooooooooooooooooooooooooooooooconcu >
+ ----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`,
+      "font-family:monospace"
+    );
+  },
+  computed: {
     ...mapGetters(["isSnackbar"])
   }
 };

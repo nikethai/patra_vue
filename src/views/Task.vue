@@ -8,12 +8,12 @@
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
             <AddTodo />
-            <Todo />
+            <Todo @refresh="getTas()"/>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
-        <TodoDescription />
+        <TodoDescription/>
       </v-col>
     </v-row>
   </v-container>

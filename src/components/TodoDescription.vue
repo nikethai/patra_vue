@@ -107,7 +107,7 @@ export default {
       let taskID = this.getTaskView.taskId;
       let assigneeSelected = this.getMem;
       let assignResp = await helper.assignHelper(taskID, assigneeSelected);
-      if (assignResp === 200) {
+      if (assignResp.status === 200) {
         this.$store.dispatch("setSnackbar", {
           status: true,
           message: "Assign Successfully!"

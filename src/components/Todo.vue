@@ -51,6 +51,7 @@ export default {
       this.delTask(id);
     },
     getTaskInfo(task) {
+      this.$emit("refresh");
       this.getTask(task);
       this.getMemActions();
     }

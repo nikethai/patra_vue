@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'querystring'
-import {qsHelp} from '@/util/qsHelper'
+import { qsHelp } from '@/util/qsHelper'
 
 export default {
   async fetchLogged({ commit }) {
@@ -52,28 +52,35 @@ export default {
     // let memarr = [];
     let assi = tsk.assignee;
     let params = {};
-    if (assi != null && Object.keys(assi).length > 0) {
-      params = { memberIDs: [...assi] };
+    console.log('assi: ', assi);
+    if (assi != null) {
+      if (Object.keys(assi).length > 0) {
+        params = { memberIDs: [...assi] };
+        if (params != null && Object.keys(params).length > 0) {
+          axios
+            .get(
+              `${process.env.VUE_APP_API_URL}/api/v0/members/?${qsHelp(params)}`
+            )
+            .then(res => {
+              commit("addMem", res.data);
+            })
+            .catch(e => console.log(e));
+        }
+      }
+      else {
+        commit("addMem", []);
+      }
     }
-    if (params != null && Object.keys(params).length > 0) {
-      axios
-        .get(
-          `${process.env.VUE_APP_API_URL}/api/v0/members/?${qsHelp(params)}`
-        )
-        .then(res => {
-          commit("addMem", res.data);
-        })
-        .catch(e => console.log(e));
-    }
+
     // commit("addMem", mem);
   },
   async setMems({ commit }, newMem) {
-    if (newMem != null){
-      commit("addMem",newMem);
+    if (newMem != null) {
+      commit("addMem", newMem);
     }
   },
-  async setSnackbar({commit},content){
-    commit("setSnackbar",content);
+  async setSnackbar({ commit }, content) {
+    commit("setSnackbar", content);
   },
   async addTask({ commit }, newTask) {
     commit("addTask", newTask);
