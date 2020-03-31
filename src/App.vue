@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import NavbarUser from "@/components/NavbarUser.vue";
+import NavbarUser from "@/components/TheNavbarUser.vue";
 import { mapGetters } from "vuex";
 
 export default {

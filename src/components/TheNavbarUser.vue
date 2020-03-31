@@ -47,9 +47,9 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 // import loginNavbar from "@/components/loginNavbar.vue";
-import loginNavbarVuetify from "@/components/loginNavbarVuetify.vue";
+import loginNavbarVuetify from "@/components/TheNavbarLogin.vue";
 // import registerNavbar from "@/components/registerNavbar.vue";
-import registerNavbarVuetify from "@/components/registerNavbarVuetify.vue";
+import registerNavbarVuetify from "@/components/TheNavbarRegister.vue";
 
 export default {
   name: "NavbarUser",
