@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     logged: {},
     userInfo:{},
+    snackbar: {status: false,message: ''},
     mem:[],
     task: [],
     sheet: [],

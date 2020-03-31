@@ -5,7 +5,7 @@
         <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
       </v-list-item-avatar>
 
-      <v-list-item-title>John Leider</v-list-item-title>
+      <v-list-item-title>{{getUserInfo.name}}</v-list-item-title>
     </v-list-item>
 
     <v-divider></v-divider>

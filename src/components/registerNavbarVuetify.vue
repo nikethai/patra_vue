@@ -72,7 +72,7 @@ export default {
     errors: []
   }),
   methods: {
-    ...mapActions(["setRegisterDialog", "setLoginDialog"]),
+    ...mapActions(["setRegisterDialog", "setLoginDialog","setSnackbar"]),
     CancelPress() {
       this.setRegisterDialog();
     },
@@ -97,7 +97,10 @@ export default {
         console.log(data);
         let regisResp = await helper.registerHelp(data);
         if (regisResp.status === 200) {
-          this.snackbar = true;
+          this.setSnackbar({
+            status: true,
+            message: "Register Successfully! Please login."
+          });
           this.LoginPress();
         } else {
           this.errors.push("An error occurred. Please try again.");

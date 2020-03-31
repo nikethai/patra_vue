@@ -44,7 +44,8 @@ const router = new Router({
       path: "/task/:id",
       name: "task",
       meta: {
-        title: "Task"
+        title: "Task",
+        requiresAuth: false,
       },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route

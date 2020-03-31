@@ -17,6 +17,10 @@
     <v-navigation-drawer app v-model="drawer">
       <NavbarUser />
     </v-navigation-drawer>
+    <v-snackbar v-model="isSnackbar.status">
+      {{isSnackbar.message}}
+      <v-btn color="pink" text @click="isSnackbar.status = false">Close</v-btn>
+    </v-snackbar>
     <v-content>
       <router-view />
     </v-content>
@@ -26,6 +30,7 @@
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
 import Test from "@/components/test.vue";
+import {mapGetters} from 'vuex';
 
 export default {
   components: {
@@ -41,6 +46,9 @@ export default {
     doSomething() {
       // alert("Yo");
     }
+  },
+  computed:{
+    ...mapGetters(["isSnackbar"])
   }
 };
 </script>

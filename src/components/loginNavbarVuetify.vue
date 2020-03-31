@@ -16,40 +16,29 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-text-field
-                label="Username"
-                required
-                v-model="username"
-              ></v-text-field>
+              <v-text-field label="Username" :rules="[rules.required]" v-model="username"></v-text-field>
             </v-row>
             <v-row>
               <v-text-field
-                label="Password"
-                required
                 v-model="password"
+                :rules="[rules.required,rules.min]"
+                :append-icon="passShow ? 'mdi-eye' : 'mdi-eye-off'"
+                label="Password*"
+                :type="passShow ? 'text' : 'password'"
+                @click:append="passShow =! passShow"
               ></v-text-field>
             </v-row>
           </v-container>
         </v-card-text>
         <span>
           Don't have an account?
-          <v-btn @click="registerIsPressed()" color="warning" small
-            >Register!</v-btn
-          >
+          <v-btn @click="registerIsPressed()" color="warning" small>Register!</v-btn>
         </span>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="loginIsPressed()" color="error" depressed
-            >Cancel
-          </v-btn>
-          <v-btn @click="dialog = logg()" color="primary" depressed
-            >Login
-          </v-btn>
+          <v-btn @click="loginIsPressed()" color="error" depressed>Cancel</v-btn>
+          <v-btn @click="dialog = logg()" color="primary" depressed>Login</v-btn>
         </v-card-actions>
-        <v-snackbar v-model="snackbar">
-          Login successfully!
-          <v-btn color="pink" text @click="snackbar = false">Close</v-btn>
-        </v-snackbar>
       </v-card>
     </v-dialog>
   </v-row>
@@ -62,11 +51,22 @@ export default {
   data: () => ({
     username: "",
     password: "",
-    snackbar: false,
+    passShow: false,
+    rules: {
+      required: value => !!value || "Required.",
+      min: value => value.length >= 8 || "Min 8 characters"
+    },
     errors: []
   }),
   methods: {
-    ...mapActions(["setLoginDialog", "setRegisterDialog", "login"]),
+    ...mapActions([
+      "setLoginDialog",
+      "setRegisterDialog",
+      "login",
+      "fetchLogged",
+      "fetchSheet",
+      "setSnackbar"
+    ]),
     registerIsPressed() {
       this.setLoginDialog();
       this.setRegisterDialog();
@@ -102,9 +102,12 @@ export default {
                 "mem_info",
                 JSON.stringify(memInfoResp.data)
               );
+              this.fetchLogged();
               this.setLoginDialog();
-              this.snackbar = true;
-              location.reload();
+              this.setSnackbar({
+                status: true,
+                message: "Login Successfully!"
+              });
             } else {
               this.errors.push("Can not get info!");
             }

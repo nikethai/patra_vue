@@ -1,13 +1,21 @@
 <template>
   <v-container fluid>
-    <v-btn color="info" text>CheckList</v-btn>
-    <v-row>
-      <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-        <v-card @click="doSomething(sheet.sheetId)">
-          <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
-        </v-card>
-      </v-col>
-    </v-row>
+    <div v-if="Object.keys(getUserInfo).length > 0">
+      <v-btn color="info" text>Welcome,{{getUserInfo.name}}, this is your Checklist</v-btn>
+      <v-row>
+        <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
+          <v-card @click="doSomething(sheet.sheetId)">
+            <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
+    <div v-else>
+      <h3>Welcome to PATRA, you must login to see your checklist</h3>
+      <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
+      <h5>Don't have an account?</h5>
+      <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -20,9 +28,15 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["fetchSheet"]),
+    ...mapActions(["fetchSheet","setRegisterDialog","setLoginDialog"]),
     doSomething(id) {
       this.$router.push({ path: `/task/${id}` });
+    },
+    loginIsPressed() {
+      this.setLoginDialog();
+    },
+    regisIsPressed() {
+      this.setRegisterDialog();
     },
     fetch_sh() {
       // let info = localStorage.getItem("user_info");
@@ -41,7 +55,15 @@ export default {
     this.fetch_sh();
   },
   computed: {
-    ...mapGetters(["allSheet"])
+    ...mapGetters(["allSheet","getUserInfo"])
+  },
+  watch:{
+    'getUserInfo': function(){
+      this.fetch_sh();
+    },
+    'allSheet': function(){
+      this.fetch_sh();
+    }
   }
 };
 </script>

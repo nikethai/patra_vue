@@ -14,7 +14,6 @@ export default {
       commit("addUser", objValue);
     }
   },
-  async getUserToAssign({ commit }, orgID) {},
   async logout({ commit }) {
     if (localStorage.getItem("jwt") != null) {
       localStorage.removeItem("jwt");
@@ -38,7 +37,6 @@ export default {
     // commit("addTask");
   },
   async fetchSheet({ commit }, orgID) {
-    console.log("hello sheet");
     axios
       .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/byOrg/${orgID}`)
       .then(res => {
@@ -47,6 +45,7 @@ export default {
       .catch(e => console.log(e));
     // commit("addTask");
   },
+  async getUserToAssign({ commit }, orgID) {},
   async getMemActions({ commit, state }) {
     const tsk = state.viewTask;
 
@@ -67,6 +66,9 @@ export default {
         .catch(e => console.log(e));
     }
     // commit("addMem", mem);
+  },
+  async setSnackbar({commit},content){
+    commit("setSnackbar",content);
   },
   async addTask({ commit }, newTask) {
     commit("addTask", newTask);

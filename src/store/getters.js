@@ -7,4 +7,5 @@ export default {
   getMem: state => state.mem,
   isLoginPressed: state => state.loginDialog,
   isRegisterPressed: state => state.registerDialog,
+  isSnackbar: state => state.snackbar,
 };

@@ -14,4 +14,9 @@ export default {
   addMem: (state,mem) => state.mem = mem,
   setLoginDialog: state => (state.loginDialog = !state.loginDialog),
   setRegisterDialog: state => (state.registerDialog = !state.registerDialog),
+  setSnackbar: (state,content) => {
+    state.snackbar.status = content.status;
+    state.snackbar.message = content.message;
+
+  },
 };
