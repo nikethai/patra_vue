@@ -40,14 +40,14 @@
                   outlined
                   style="pointer-events: none"
                   text
-                  >ABC@gmail.com
+                  >{{ email }}
                 </v-btn>
               </v-col>
               <v-col cols="12" md="6">
                 <v-list-item-content>
                   <v-list-item-title>Full Name</v-list-item-title>
 
-                  <v-list-item-subtitle>TBD</v-list-item-subtitle>
+                  <v-list-item-subtitle>{{ full_name }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-col>
             </v-row>
@@ -64,19 +64,31 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
-  name: "users",
+  name: "profile",
   data() {
     return {
       selected: "",
       tab: null
     };
   },
-  computed: { ...mapGetters(["getUserInfo"]) }
+  computed: mapState("profile", [
+    "username",
+    "full_name",
+    "email",
+    "photo_url"
+  ]),
+  methods: {
+    ...mapActions("profile", ["fetchProfile"])
+  },
+  beforeMount() {
+    this.fetchProfile();
+  }
 };
 </script>
+
 <style scoped>
 img {
   max-width: 100%;
