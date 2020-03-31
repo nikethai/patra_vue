@@ -1,7 +1,13 @@
+const path = require('path');
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "patra_vue" : "/",
   configureWebpack: {
-    devtool: "source-map"
+    devtool: "source-map",
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src")
+      }
+    }
   },
   transpileDependencies: ["vuetify"],
   pwa: {

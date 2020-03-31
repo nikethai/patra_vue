@@ -25,12 +25,10 @@
 
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
-import Test from "@/components/test.vue";
 
 export default {
   components: {
-    NavbarUser,
-    Test
+    NavbarUser
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
@@ -45,7 +43,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 .v-app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

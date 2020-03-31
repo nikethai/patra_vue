@@ -1,6 +1,6 @@
 {
   "name": "patra",
-  "version": "0.1",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -46,7 +46,11 @@
     ],
     "rules": {
       "no-console": "off",
-      "no-unused-vars": "warn"
+      "no-unused-vars": "warn",
+      "space-before-function-paren": "off",
+      "space-before-blocks": "off",
+      "no-trailing-spaces": "off",
+      "comma-dangle": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"

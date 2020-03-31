@@ -9,12 +9,17 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
+      path: "/home",
       name: "home",
+      alias: "/",
       component: Home,
       meta: {
         title: "Home"
       }
+    },
+    {
+      path: "*",
+      redirect: "/"
     },
     {
       path: "/about",
@@ -22,11 +27,7 @@ const router = new Router({
       meta: {
         title: "About"
       },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+      component: () => import("./views/About.vue")
     },
     {
       path: "/corona",
@@ -34,11 +35,7 @@ const router = new Router({
       meta: {
         title: "Corona"
       },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Corona.vue")
+      component: () => import("./views/Corona.vue")
     },
     {
       path: "/task/:id",
@@ -46,24 +43,17 @@ const router = new Router({
       meta: {
         title: "Task"
       },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Task.vue")
+      component: () => import("./views/Task.vue")
     },
     {
-      path: "/users",
-      name: "users",
+      path: "/profile/:username?",
+      name: "profile",
       meta: {
         requiresAuth: false,
-        title: "Users"
+        title: "User profile"
       },
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/Users.vue")
+
+      component: () => import("./views/Profile.vue")
     }
   ]
 });
