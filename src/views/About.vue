@@ -5,21 +5,21 @@
       <b>Let see what happen:</b>
       <b-container>
         <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
           :per-page="perPage"
-          aria-controls="myCol"
+          :total-rows="rows"
           align="center"
+          aria-controls="myCol"
+          v-model="currentPage"
         ></b-pagination>
         <!-- <b-col id="myCol" >
-          <p>{{item.id}}</p>
-        </b-col> -->
+                  <p>{{item.id}}</p>
+                </b-col> -->
 
         <div class="row">
           <div
+            :key="index"
             class="col"
             v-for="(item, index) in currentPageItems"
-            :key="index"
           >
             <img :src="item.file_url" />
           </div>

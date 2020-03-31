@@ -1,22 +1,24 @@
 <template>
   <v-app class="v-app">
     <v-app-bar
-      disable-route-watcher
-      disable-resize-watcher="true"
-      class="nav-bar"
-      :collapse="!collapseOnScroll"
-      :collapse-on-scroll="collapseOnScroll"
       app
+      class="nav-bar"
       color="accent"
       dense
+      disable-resize-watcher="true"
+      disable-route-watcher
       flat
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="patr">Patra</v-toolbar-title>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" app>
-      <NavbarUser />
+    <v-navigation-drawer app v-model="drawer">
+      <TheNavbarUser />
     </v-navigation-drawer>
+    <v-snackbar v-model="isSnackbar.status">
+      {{isSnackbar.message}}
+      <v-btn color="pink" text @click="isSnackbar.status = false">Close</v-btn>
+    </v-snackbar>
     <v-content>
       <router-view />
     </v-content>
@@ -24,28 +26,42 @@
 </template>
 
 <script>
-import NavbarUser from "@/components/NavbarUser.vue";
-import Test from "@/components/test.vue";
+import TheNavbarUser from "@/components/TheNavbarUser.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    NavbarUser,
-    Test
+    TheNavbarUser
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
-    collapseOnScroll: true,
     drawer: false
   }),
   methods: {
     doSomething() {
       // alert("Yo");
     }
+  },
+  mounted() {
+    console.log(
+      `%c ________________________________________
+< moooooooooooooooooooooooooooooooooconcu >
+ ----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`,
+      "font-family:monospace"
+    );
+  },
+  computed: {
+    ...mapGetters(["isSnackbar"])
   }
 };
 </script>
 
-<style scope>
+<style scoped>
 .v-app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -53,6 +69,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
 .nav-bar {
   margin-bottom: 30px;
   background: rgb(216, 228, 235);
@@ -74,6 +91,7 @@ export default {
 .nav-bar a.router-link-exact-active {
   color: #42b983;
 }
+
 .patr {
   color: #42b983;
 }

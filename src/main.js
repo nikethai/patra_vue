@@ -7,11 +7,13 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import Vuetify from "vuetify/lib";
+import AsyncComputed from 'vue-async-computed';
 import "./registerServiceWorker";
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(Vuetify);
+Vue.use(AsyncComputed);
 Vue.component("v-alert", {});
 Vue.component("v-app", {});
 

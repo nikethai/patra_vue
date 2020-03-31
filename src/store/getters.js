@@ -4,6 +4,8 @@ export default {
   allSheet: state => state.sheet,
   getUserInfo: state => state.userInfo,
   getTaskView: state => state.viewTask,
+  getMem: state => state.mem,
   isLoginPressed: state => state.loginDialog,
   isRegisterPressed: state => state.registerDialog,
+  isSnackbar: state => state.snackbar,
 };
