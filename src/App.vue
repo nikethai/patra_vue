@@ -1,8 +1,6 @@
 <template>
   <v-app class="v-app">
     <v-app-bar
-      :collapse="!collapseOnScroll"
-      :collapse-on-scroll="collapseOnScroll"
       app
       class="nav-bar"
       color="accent"
@@ -39,7 +37,6 @@ export default {
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
-    collapseOnScroll: true,
     drawer: false
   }),
   methods: {

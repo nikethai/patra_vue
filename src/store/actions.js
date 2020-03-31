@@ -45,11 +45,11 @@ export default {
       .catch(e => console.log(e));
     // commit("addTask");
   },
-  async getUserToAssign({ commit }, orgID) {},
+  // async getUserToAssign({ commit }, orgID) {},
   async getMemActions({ commit, state }) {
     const tsk = state.viewTask;
 
-    let memarr = [];
+    // let memarr = [];
     let assi = tsk.assignee;
     let params = {};
     if (assi != null && Object.keys(assi).length > 0) {
@@ -66,6 +66,11 @@ export default {
         .catch(e => console.log(e));
     }
     // commit("addMem", mem);
+  },
+  async setMems({ commit }, newMem) {
+    if (newMem != null){
+      commit("addMem",newMem);
+    }
   },
   async setSnackbar({commit},content){
     commit("setSnackbar",content);
