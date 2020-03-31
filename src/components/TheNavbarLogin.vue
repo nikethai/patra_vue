@@ -48,6 +48,7 @@ import helper from "@/util/fetchHelper.js";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
+  name: "TheNavbarLogin",
   data: () => ({
     username: "",
     password: "",

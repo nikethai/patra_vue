@@ -21,7 +21,7 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
-    <v-list-item @click="loggout()">
+    <v-list-item @click="logout_click()">
       <v-list-item-icon>
         <v-icon>mdi-logout</v-icon>
       </v-list-item-icon>
@@ -39,20 +39,18 @@
         <v-list-item-title>Login</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <loginNavbarVuetify />
-    <registerNavbarVuetify />
+    <TheNavbarLogin />
+    <TheNavbarRegister />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-// import loginNavbar from "@/components/loginNavbar.vue";
-import loginNavbarVuetify from "@/components/TheNavbarLogin.vue";
-// import registerNavbar from "@/components/registerNavbar.vue";
-import registerNavbarVuetify from "@/components/TheNavbarRegister.vue";
+import TheNavbarLogin from "@/components/TheNavbarLogin.vue";
+import TheNavbarRegister from "@/components/TheNavbarRegister.vue";
 
 export default {
-  name: "NavbarUser",
+  name: "TheNavbarUser",
   data: () => ({
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
@@ -63,10 +61,8 @@ export default {
     ]
   }),
   components: {
-    // loginNavbar,
-    loginNavbarVuetify,
-    registerNavbarVuetify
-    // registerNavbar
+    TheNavbarLogin,
+    TheNavbarRegister
   },
   methods: {
     ...mapActions(["fetchLogged"]),
@@ -77,7 +73,7 @@ export default {
     getUser() {
       this.$router.push("users");
     },
-    loggout() {
+    logout_click() {
       this.logout();
       location.reload();
     }

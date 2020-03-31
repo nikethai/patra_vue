@@ -13,7 +13,7 @@
       <v-toolbar-title class="patr">Patra</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer">
-      <NavbarUser />
+      <TheNavbarUser />
     </v-navigation-drawer>
     <v-snackbar v-model="isSnackbar.status">
       {{isSnackbar.message}}
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import NavbarUser from "@/components/TheNavbarUser.vue";
+import TheNavbarUser from "@/components/TheNavbarUser.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
-    NavbarUser
+    TheNavbarUser
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },

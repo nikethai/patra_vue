@@ -53,6 +53,7 @@ import { mapActions, mapGetters } from "vuex";
 import helper from "@/util/fetchHelper.js";
 
 export default {
+  name: "TheNavbarRegister",
   data: () => ({
     dialog: false,
     snackbar: false,
