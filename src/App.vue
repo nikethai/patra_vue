@@ -27,13 +27,11 @@
 
 <script>
 import NavbarUser from "@/components/NavbarUser.vue";
-import Test from "@/components/test.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     NavbarUser,
-    Test
   },
   data: () => ({
     item: { icon: "mdi-logout", name: "Logout", link: "/" },
