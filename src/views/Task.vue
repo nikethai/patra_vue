@@ -2,12 +2,12 @@
   <v-container fluid>
     <v-row>
       <v-col
-        :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-4':'md-12 nopadding-task'"
+        :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-3':'md-12 nopadding-task'"
       >
-        <v-card class="mx-auto" flat>
+        <v-card class="mx-auto grey lighten-3" flat>
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
-            <AddTodo />
+            <!-- <AddTodo /> -->
             <Todo @refresh="getTas()"/>
           </v-card-text>
         </v-card>
@@ -39,7 +39,7 @@ export default {
   },
   components: {
     Todo,
-    AddTodo,
+    // AddTodo,
     TodoDescription
   },
   methods: {

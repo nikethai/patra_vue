@@ -1,9 +1,10 @@
 <template>
   <div>
+    <v-btn dense text color="info" @click="saveEdit">{{buttonValue}}</v-btn>
     <span :key="todo.id" v-for="todo in allTask">
-      <v-list flat>
+      <v-list flat class="grey lighten-3">
         <v-list-item>
-          <v-list-item-action>
+          <!-- <v-list-item-action>
             <v-checkbox
               :false-value="0"
               :true-value="1"
@@ -11,14 +12,29 @@
               on-icon="mdi-check-circle"
               v-model="todo.status_id"
             ></v-checkbox>
-          </v-list-item-action>
+          </v-list-item-action>-->
           <v-list-item-content>
             <v-list-item-title>
-              <span
-                :class="{ 'is-completed': todo.status_id }"
+              <p
+                solo
+                v-if="!isEditing"
+                :value="todo.taskName"
                 @click="getTaskInfo(todo)"
-                >{{ todo.taskName }}</span
-              >
+                :class="[todo.status_id ? 'is-completed':'']"
+              >{{ todo.taskName }}</p>
+              <v-text-field
+                solo
+                :value="todo.taskName"
+                @input="taskNameChanged($event,todo)"
+                @click="getTaskInfoEdit(todo)"
+                @blur="doSomething"
+                v-if="isEditing"
+              ></v-text-field>
+              <!-- <span
+                  :class="{ 'is-completed': todo.status_id }"
+                  @click="getTaskInfo(todo)"
+                  >{{ todo.taskName }}</span
+              >-->
             </v-list-item-title>
           </v-list-item-content>
 
@@ -32,7 +48,7 @@
           <li>
             <TodoItem v-bind:todo="todo" />
           </li>
-        </ul>-->
+    </ul>-->
   </div>
 </template>
 
@@ -42,18 +58,42 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Todo",
   props: ["todos"],
+  data() {
+    return {
+      isEditing: false,
+      buttonValue: "Edit"
+    };
+  },
   computed: {
-    ...mapGetters(["allTask"])
+    ...mapGetters(["allTask", "getTaskView"])
   },
   methods: {
-    ...mapActions(["delTask","getTask","getMemActions"]),
+    ...mapActions(["delTask", "getTask", "getMemActions", "editTaskActions"]),
     deleteTask(id) {
       this.delTask(id);
+    },
+    doSomething(){
+      console.log("Blur event triggered")
     },
     getTaskInfo(task) {
       this.$emit("refresh");
       this.getTask(task);
-      this.getMemActions();
+      this.getMemActions(); //get mem in org to assign
+    },
+    getTaskInfoEdit(task) {
+      this.getTask(task);
+    },
+    saveEdit() {
+      if (!this.isEditing) {
+        this.buttonValue = "Save";
+        this.isEditing = true;
+      } else {
+        this.buttonValue = "Edit";
+        this.isEditing = false;
+      }
+    },
+    taskNameChanged(val, task) {
+      this.editTaskActions({ newVal: val, currTask: task });
     }
   }
 };
@@ -63,5 +103,8 @@ export default {
 .is-completed {
   color: #d9d9d9;
   text-decoration: line-through;
+}
+.is-editing {
+  pointer-events: none;
 }
 </style>

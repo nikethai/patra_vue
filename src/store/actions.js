@@ -74,6 +74,14 @@ export default {
 
     // commit("addMem", mem);
   },
+  async editTaskActions({ commit }, { newVal, currTask }) {
+    console.log("an cut an dau buoi", currTask);
+    console.log("an cut an dau buoi 2", newVal);
+
+    if (currTask != null && newVal != null) {
+      commit("editTaskView", {newVal: newVal,currTask: currTask});
+    }
+  },
   async setMems({ commit }, newMem) {
     if (newMem != null) {
       commit("addMem", newMem);

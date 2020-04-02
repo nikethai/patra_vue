@@ -63,9 +63,6 @@ export default {
     getUserInfo: function() {
       this.fetch_sh();
     },
-    allSheet: function() {
-      this.fetch_sh();
-    }
   }
 };
 </script>

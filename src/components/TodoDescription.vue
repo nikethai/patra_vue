@@ -37,35 +37,25 @@
     </v-flex>
     <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
     <v-divider></v-divider>
-    <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
+    <v-container>
       <h5>Comments</h5>
       <!-- <v-row class="mx-auto">
               <v-col cols="12" style="text-align: left">
                 
               </v-col>
       </v-row>-->
-      <v-flex
-        v-if="getTaskView.comments.length > 0"
-        class="d-flex flex-column"
-        style="text-align: left"
-      >
-        <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" tile>
-          <v-row no-gutters>
-            <v-list-item-avatar>
-              <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{cmt.username}}</v-list-item-title>
-            </v-list-item-content>
-          </v-row>
-
-          <v-row no-gutters>
-            <v-container>
-              <p class="text-wrap">{{cmt.comment}}</p>
-            </v-container>
-          </v-row>
-        </v-card>
-      </v-flex>
+      <span v-if="getTaskView.comments && getTaskView.comments.length ">
+        <Comments />
+      </span>
+      <div class="border container round">
+        <ckeditor
+          :editor="editor"
+          :disabled="editorDisable"
+          v-model="editorData"
+          :config="editorConfig"
+        ></ckeditor>
+        <v-btn color="green" text small @click="submitComment">Submit</v-btn>
+      </div>
     </v-container>
   </v-card>
 </template>
@@ -74,14 +64,28 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import helper from "@/util/fetchHelper.js";
+import Comments from "@/components/Comments.vue";
+import InlineEditor from "@ckeditor/ckeditor5-build-inline";
 
 export default {
   name: "tododescription",
   data() {
     return {
       dialog: false,
-      items: []
+      items: [],
+      editor: InlineEditor,
+      editorDisable: false,
+      buttonText: "Edit",
+      content: "",
+      editorConfig: {
+        // The configuration of the editor.
+        placeholder: "Add comment here...",
+        toolbar: ["bold", "italic", "|", "undo", "redo"]
+      }
     };
+  },
+  components: {
+    Comments
   },
   methods: {
     getUserFromOrgID() {
@@ -118,6 +122,11 @@ export default {
           message: "Assign Failed!"
         });
       }
+    },
+    submitComment(){
+      if (this.content != null && this.content.length > 0){
+        localStorage.setItem("test",this.content);
+      }
     }
   },
   mounted() {
@@ -133,10 +142,27 @@ export default {
         console.log("select value: ", value);
         this.$store.dispatch("setMems", value);
       }
+    },
+    editorData: {
+      get() {
+        return localStorage.getItem("test");
+      },
+      set(val) {
+        this.content = val;
+      }
     }
   }
 };
 </script>
 
 <style>
+.border {
+  border: 1px solid #ccc !important;
+}
+.container {
+  padding: 0.01em 16px;
+}
+.round {
+  border-radius: 16px;
+}
 </style>

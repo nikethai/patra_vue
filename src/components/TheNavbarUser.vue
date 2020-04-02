@@ -55,7 +55,7 @@ export default {
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
       { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-account-circle", name: "User", link: "/Users" },
+      { icon: "mdi-account-circle", name: "User", link: "/Profile" },
       { icon: "mdi-virus", name: "Corona", link: "/Corona" },
       { icon: "mdi-calendar-check", name: "Task", link: "/Task" }
     ]
