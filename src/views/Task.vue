@@ -5,7 +5,7 @@
         :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-3':'md-12 nopadding-task'"
       >
         <v-card class="mx-auto grey lighten-3" flat>
-          <v-card-title class="justify-center">Checklist1</v-card-title>
+          <v-card-title class="justify-center">{{getSheetName}}</v-card-title>
           <v-card-text>
             <!-- <AddTodo /> -->
             <Todo @refresh="getTas()" />
@@ -54,6 +54,9 @@ export default {
         obj.constructor === Object
       );
     },
+    isNotEmpArr(arr) {
+      return Array.isArray(arr) && arr.length;
+    },
     assign() {
       this.dialog = false;
     }
@@ -62,7 +65,14 @@ export default {
     this.getTas();
   },
   computed: {
-    ...mapGetters(["getTaskView"])
+    ...mapGetters(["getTaskView"]),
+    getSheetName(){
+      let sheetName = localStorage.getItem("sheet_name");
+      if (sheetName != null){
+        return sheetName;
+      }
+      return "";
+    }
   }
 };
 </script>

@@ -105,6 +105,9 @@ export default {
   async getTask({ commit }, task) {
     commit("getTask", task);
   },
+  async getTaskByIndex({ commit }, index) {
+    commit("getTaskByIndex", index);
+  },
   async setLoginDialog({ commit }) {
     commit("setLoginDialog");
   },

@@ -40,22 +40,43 @@
                   outlined
                   style="pointer-events: none"
                   text
-                  >{{ email }}
-                </v-btn>
+                >{{ email }}</v-btn>
               </v-col>
               <v-col cols="12" md="6">
                 <v-list-item-content>
                   <v-list-item-title>Full Name</v-list-item-title>
-
-                  <v-list-item-subtitle>{{ full_name }}</v-list-item-subtitle>
                 </v-list-item-content>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-btn
+                  color="blue "
+                  large
+                  outlined
+                  style="pointer-events: none"
+                  text
+                >{{ full_name }}</v-btn>
               </v-col>
             </v-row>
           </v-card>
         </v-tab-item>
         <v-tab-item>
-          <v-card flat>
-            <v-card-text>Lorem Patra Posstasium</v-card-text>
+          <v-card class="grey lighten-4">
+            <v-card-title>
+              <span class="headline">Your Organizations</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-combobox
+                  v-model="getSelectOrg"
+                  outlined
+                  dense
+                  :items="getAllOrg"
+                  item-text="name"
+                  return-object
+                  label="Select your organization"
+                ></v-combobox>
+              </v-container>
+            </v-card-text>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -65,6 +86,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "profile",
@@ -74,12 +96,29 @@ export default {
       tab: null
     };
   },
-  computed: mapState("profile", [
-    "username",
-    "full_name",
-    "email",
-    "photo_url"
-  ]),
+  asyncComputed: {
+    ...mapState("profile", ["username", "full_name", "email", "photo_url"]),
+    getSelectOrg: {
+      get() {
+        return ["abcd", "bcde", "efgh"];
+      },
+      set(value) {
+        console.log("select value: ", value);
+      }
+    },
+    async getAllOrg() {
+      let user_info = localStorage.getItem("user_info");
+      let username = "";
+      if (user_info != null) {
+        user_info = JSON.parse(user_info);
+        username = user_info.username;
+      }
+      let getOrgResp = await helper.getUserOrgHelp(username);
+      console.log(getOrgResp);
+
+      return getOrgResp.data;
+    }
+  },
   methods: {
     ...mapActions("profile", ["fetchProfile"])
   },

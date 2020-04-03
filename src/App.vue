@@ -10,14 +10,14 @@
       flat
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title class="patr">Patra</v-toolbar-title>
+      <v-toolbar-title @click="getHome" class="patr">Patra</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer">
       <TheNavbarUser />
     </v-navigation-drawer>
     <v-snackbar :value="isSnackbar.status">
       {{isSnackbar.message}}
-      <v-btn color="pink" text @click="isSnackbar.status = false">Close</v-btn>
+      <v-btn color="pink" text @click="closeSnackr">Close</v-btn>
     </v-snackbar>
     <v-content>
       <router-view />
@@ -34,12 +34,14 @@ export default {
     TheNavbarUser
   },
   data: () => ({
-    item: { icon: "mdi-logout", name: "Logout", link: "/" },
     drawer: false
   }),
   methods: {
-    doSomething() {
-      // alert("Yo");
+    getHome() {
+      this.$router.push({path: '/'})
+    },
+    closeSnackr(){
+      this.$store.commit("closeSnackbar");
     }
   },
   mounted() {
