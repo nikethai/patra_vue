@@ -22,6 +22,7 @@ export default new Vuex.Store({
     task: [],
     sheet: [],
     viewTask: {},
+    viewTaskByIndex: null,
     loginDialog: false,
     registerDialog: false,
   },

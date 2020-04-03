@@ -127,7 +127,6 @@ export default {
       if (this.content != null && this.content.length > 0 && taskId != null) {
         let usrCmt = this.getUserInfo.name;
         if (usrCmt != null) {
-         
           let cmtResp = await helper.commentHelp(taskId, this.content, usrCmt);
           if (cmtResp.status === 200) {
             this.$store.dispatch("setSnackbar", {
@@ -137,7 +136,7 @@ export default {
             this.$emit("refresh");
           } else {
             console.log(cmtResp);
-            
+
             this.$store.dispatch("setSnackbar", {
               status: true,
               message: "Fail to add comment!"
@@ -145,13 +144,17 @@ export default {
           }
         }
       }
-    }
+    },
   },
   mounted() {
     this.getUserFromOrgID();
   },
   computed: {
-    ...mapGetters(["getTaskView", "getMem", "getUserInfo"]),
+    ...mapGetters([
+      "getTaskView",
+      "getMem",
+      "getUserInfo",
+    ]),
     getUsrFr: {
       get() {
         return this.getMem;
@@ -163,7 +166,7 @@ export default {
     },
     editorData: {
       get() {
-        return localStorage.getItem("test");
+        return ""
       },
       set(val) {
         this.content = val;

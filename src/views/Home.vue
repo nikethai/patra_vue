@@ -1,12 +1,14 @@
 <template>
   <v-container fluid>
     <div v-if="Object.keys(getUserInfo).length > 0">
-      <v-btn color="info" style="pointer-events: none" text>
-        Welcome,{{ getUserInfo.name }}, this is your Checklist
-      </v-btn>
+      <v-btn
+        color="info"
+        style="pointer-events: none"
+        text
+      >Welcome,{{ getUserInfo.name }}, this is your Checklist</v-btn>
       <v-row>
         <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-          <v-card @click="doSomething(sheet.sheetId)">
+          <v-card @click="doSomething(sheet)">
             <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
           </v-card>
         </v-col>
@@ -31,7 +33,9 @@ export default {
   },
   methods: {
     ...mapActions(["fetchSheet", "setRegisterDialog", "setLoginDialog"]),
-    doSomething(id) {
+    doSomething(sheet) {
+      let id = sheet.sheetId;
+      localStorage.setItem("sheet_name", sheet.sheetName);
       this.$router.push({ path: `/task/${id}` });
     },
     loginIsPressed() {
@@ -62,7 +66,7 @@ export default {
   watch: {
     getUserInfo: function() {
       this.fetch_sh();
-    },
+    }
   }
 };
 </script>

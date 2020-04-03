@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn dense text color="info" @click="saveEdit">{{buttonValue}}</v-btn>
-    <span :key="todo.id" v-for="todo in allTask">
+    <span :key="todo.id" v-for="(todo,index) in allTask">
       <v-list flat class="grey lighten-3">
         <v-list-item>
           <!-- <v-list-item-action>
@@ -19,7 +19,7 @@
                 solo
                 v-if="!isEditing"
                 :value="todo.taskName"
-                @click="getTaskInfo(todo)"
+                @click="getTaskInfo(todo,index)"
                 :class="[todo.status_id ? 'is-completed':'']"
               >{{ todo.taskName }}</p>
               <v-text-field
@@ -68,16 +68,23 @@ export default {
     ...mapGetters(["allTask", "getTaskView"])
   },
   methods: {
-    ...mapActions(["delTask", "getTask", "getMemActions", "editTaskActions"]),
+    ...mapActions([
+      "delTask",
+      "getTask",
+      "getMemActions",
+      "editTaskActions",
+      "getTaskByIndex"
+    ]),
     deleteTask(id) {
       this.delTask(id);
     },
-    doSomething(){
-      console.log("Blur event triggered")
+    doSomething() {
+      console.log("Blur event triggered");
     },
-    getTaskInfo(task) {
-      this.$emit("refresh");
+    getTaskInfo(task, index) {
+      this.$emit("refresh"); //get fresh task from API
       this.getTask(task);
+      this.getTaskByIndex(index);
       this.getMemActions(); //get mem in org to assign
     },
     getTaskInfoEdit(task) {

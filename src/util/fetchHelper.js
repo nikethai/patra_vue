@@ -82,4 +82,11 @@ export default {
             .catch(e => e);//eslint-disable
 
     },
+    async getUserOrgHelp(username) {
+        return axios
+            .get(`${process.env.VUE_APP_API_URL}/api/v0/users/${username}/organizations`)
+            .then(res => res)
+            .catch(e => e);//eslint-disable
+
+    },
 }

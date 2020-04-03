@@ -61,9 +61,7 @@ export default {
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
       { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-account-circle", name: "User", link: "/Profile" },
       { icon: "mdi-virus", name: "Corona", link: "/Corona" },
-      { icon: "mdi-calendar-check", name: "Task", link: "/Task" }
     ],
     logoutDialog: false
   }),
@@ -78,7 +76,7 @@ export default {
       this.setLoginDialog();
     },
     getUser() {
-      this.$router.push("users");
+      this.$router.push({ path: `/profile/${this.getUserInfo.username}` });
     },
     logout_click() {
       this.logout();

@@ -6,6 +6,7 @@ export default {
   addTask: (state, newTask) => state.task.push(newTask),
   setTask: (state, Task) => state.task = Task,
   getTask: (state, task) => (state.viewTask = task),
+  getTaskByIndex: (state, index) => (state.viewTaskByIndex = index),
   editTaskView: (state, { newVal, currTask }) => {
     // let index = state.task.findIndex(x => x.taskName === currTask.taskName);
     if (state.viewTask.taskId === currTask.taskId) {
@@ -41,5 +42,8 @@ export default {
     state.snackbar.status = content.status;
     state.snackbar.message = content.message;
 
+  },
+  closeSnackbar: (state) => {
+    state.snackbar.status = false;
   },
 };
