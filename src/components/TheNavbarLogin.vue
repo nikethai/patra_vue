@@ -98,7 +98,8 @@ export default {
                 JSON.stringify(userInfoResp.data)
               );
               memInfoResp = await helper.memInfoHelp(
-                userInfoResp.data.currMemberId
+                userInfoResp.data.currMemberId,
+                jwt
               );
               if (memInfoResp.status === 200) {
                 localStorage.setItem(
@@ -124,9 +125,8 @@ export default {
           }
           this.username = "";
           this.password = "";
-        }
-        else{
-          this.errors.push("Password must be at least 8 characters")
+        } else {
+          this.errors.push("Password must be at least 8 characters");
         }
       }
     }

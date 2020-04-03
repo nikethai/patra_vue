@@ -1,6 +1,12 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
+    <v-card-title v-if="!isEditButtonClicked" class="justify-center">{{getTaskView.taskName}}</v-card-title>
+    <v-text-field
+      solo
+      :value="getTaskView.taskName"
+      @input="onEditorEditTask"
+      v-if="isEditButtonClicked"
+    ></v-text-field>
     <v-flex class="d-flex flex-row justify-space-around">
       <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
       <v-dialog v-model="dialog" persistent max-width="500px">
@@ -35,7 +41,18 @@
         <p v-for="usr in getUsrFr" :key="usr.memberId">{{usr.username}}</p>
       </span>
     </v-flex>
-    <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
+
+    <v-card-text v-if="!isEditButtonClicked" v-html="getTaskView.taskDetails"></v-card-text>
+    <span v-if="isEditButtonClicked">
+      <ckeditor
+        :editor="editor"
+        :disabled="editorDisable"
+        :value="getTaskView.taskDetails"
+        @input="onEditorEditTask"
+        :config="editorConfig"
+      ></ckeditor>
+    </span>
+
     <v-divider></v-divider>
     <v-container>
       <h5>Comments</h5>
@@ -51,7 +68,8 @@
         <ckeditor
           :editor="editor"
           :disabled="editorDisable"
-          v-model="editorData"
+          :value="content"
+          @input="onEditorEdit"
           :config="editorConfig"
         ></ckeditor>
         <v-btn color="green" text small @click="submitComment(getTaskView.taskId)">Submit</v-btn>
@@ -90,11 +108,18 @@ export default {
   methods: {
     getUserFromOrgID() {
       let mem = localStorage.getItem("mem_info");
-      if (mem != null) {
+      let jwt = localStorage.getItem("jwt");
+      if (mem != null && jwt != null) {
+        let config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          }
+        };
         mem = JSON.parse(mem);
         axios
           .get(
-            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`
+            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`,
+            config
           )
           .then(res => {
             // let stringarr = res.data.map(item => {
@@ -126,14 +151,21 @@ export default {
     async submitComment(taskId) {
       if (this.content != null && this.content.length > 0 && taskId != null) {
         let usrCmt = this.getUserInfo.name;
-        if (usrCmt != null) {
-          let cmtResp = await helper.commentHelp(taskId, this.content, usrCmt);
+        let jwt = localStorage.getItem("jwt");
+        if (usrCmt != null && jwt != null) {
+          let cmtResp = await helper.commentHelp(
+            taskId,
+            this.content,
+            usrCmt,
+            jwt
+          );
           if (cmtResp.status === 200) {
             this.$store.dispatch("setSnackbar", {
               status: true,
               message: "Comment added!"
             });
             this.$emit("refresh");
+            this.content = "";
           } else {
             console.log(cmtResp);
 
@@ -141,10 +173,17 @@ export default {
               status: true,
               message: "Fail to add comment!"
             });
+            this.content = "";
           }
         }
       }
     },
+    onEditorEdit(value) {
+      this.content = value;
+    },
+    onEditorEditTask(value) {
+      console.log("select value: ", value);
+    }
   },
   mounted() {
     this.getUserFromOrgID();
@@ -154,6 +193,7 @@ export default {
       "getTaskView",
       "getMem",
       "getUserInfo",
+      "isEditButtonClicked"
     ]),
     getUsrFr: {
       get() {
@@ -166,7 +206,7 @@ export default {
     },
     editorData: {
       get() {
-        return ""
+        return "";
       },
       set(val) {
         this.content = val;

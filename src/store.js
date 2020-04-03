@@ -25,6 +25,7 @@ export default new Vuex.Store({
     viewTaskByIndex: null,
     loginDialog: false,
     registerDialog: false,
+    editButtonClicked: false,
   },
   getters,
   actions,

@@ -30,11 +30,20 @@ export default {
         return info;
 
     },
-    async memInfoHelp(currMemberId) {
-        return axios
-            .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${currMemberId}`)
-            .then(res => res)
-            .catch(e => e);//eslint-disable
+    async memInfoHelp(currMemberId, jwt) {
+        let info;
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        if (jwt != null) {
+            info = await axios
+                .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${currMemberId}`, config)
+                .then(res => res)
+                .catch(e => e);//eslint-disable
+        }
+        return info
 
     },
     async registerHelp(form) {
@@ -71,20 +80,54 @@ export default {
 
         }
     },
-    async commentHelp(taskId, comment, username) {
+    async commentHelp(taskId, comment, username,jwt) {
         let data = {
             comment: comment,
             username: username
         }
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
         return axios
-            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments`,data)
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments`, data,config)
             .then(res => res)
             .catch(e => e);//eslint-disable
 
     },
-    async getUserOrgHelp(username) {
+    async getUserOrgHelp(username, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
         return axios
-            .get(`${process.env.VUE_APP_API_URL}/api/v0/users/${username}/organizations`)
+            .get(`${process.env.VUE_APP_API_URL}/api/v0/users/${username}/organizations`,config)
+            .then(res => res)
+            .catch(e => e);//eslint-disable
+
+    },
+    async getAllOrgHelp(jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .get(`${process.env.VUE_APP_API_URL}/api/v0/organizations/all`,config)
+            .then(res => res)
+            .catch(e => e);//eslint-disable
+
+    },
+    async deleteTaskHelp(taskId,jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}`,config)
             .then(res => res)
             .catch(e => e);//eslint-disable
 

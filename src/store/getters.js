@@ -9,4 +9,5 @@ export default {
   isLoginPressed: state => state.loginDialog,
   isRegisterPressed: state => state.registerDialog,
   isSnackbar: state => state.snackbar,
+  isEditButtonClicked: state => state.editButtonClicked,
 };

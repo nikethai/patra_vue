@@ -15,13 +15,14 @@
           </v-list-item-action>-->
           <v-list-item-content>
             <v-list-item-title>
-              <p
+              <span
                 solo
                 v-if="!isEditing"
                 :value="todo.taskName"
                 @click="getTaskInfo(todo,index)"
                 :class="[todo.status_id ? 'is-completed':'']"
-              >{{ todo.taskName }}</p>
+                class="border container round"
+              >{{ todo.taskName }}</span>
               <v-text-field
                 solo
                 :value="todo.taskName"
@@ -38,9 +39,22 @@
             </v-list-item-title>
           </v-list-item-content>
 
-          <v-btn @click="deleteTask(todo)" icon ripple>
-            <v-icon color="red">mdi-close-circle</v-icon>
-          </v-btn>
+          <v-dialog v-model="deleteDialog" persistent max-width="290">
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon ripple>
+                <v-icon color="red">mdi-close-circle</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title>Delete this task?</v-card-title>
+              <v-card-subtitle>This action cannot be reverted!</v-card-subtitle>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="deleteDialog = false">No</v-btn>
+                <v-btn color="red darken-1" text @click="deleteTask(todo)">Yes</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-list-item>
       </v-list>
     </span>
@@ -54,6 +68,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "Todo",
@@ -61,7 +76,8 @@ export default {
   data() {
     return {
       isEditing: false,
-      buttonValue: "Edit"
+      buttonValue: "Edit",
+      deleteDialog: false
     };
   },
   computed: {
@@ -75,8 +91,27 @@ export default {
       "editTaskActions",
       "getTaskByIndex"
     ]),
-    deleteTask(id) {
-      this.delTask(id);
+    async deleteTask(id) {
+      let jwt = localStorage.getItem("jwt");
+      if (id != null && jwt != null) {
+        let tskID = id.taskId;
+        let delTaskResp = await helper.deleteTaskHelp(tskID,jwt);
+        if (delTaskResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Successfully!"
+          });
+          this.$emit("refresh");
+        } else {
+          console.log(delTaskResp);
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Failed!"
+          });
+        }
+      }
+      // this.delTask(id); //not change in state anymore
+      this.deleteDialog = false;
     },
     doSomething() {
       console.log("Blur event triggered");
@@ -94,9 +129,11 @@ export default {
       if (!this.isEditing) {
         this.buttonValue = "Save";
         this.isEditing = true;
+        this.$store.commit("setEditButtonClick");
       } else {
         this.buttonValue = "Edit";
         this.isEditing = false;
+        this.$store.commit("setEditButtonClick");
       }
     },
     taskNameChanged(val, task) {
@@ -113,5 +150,14 @@ export default {
 }
 .is-editing {
   pointer-events: none;
+}
+.border {
+  border: 1px solid #ccc !important;
+}
+.container {
+  padding: 0.01em 16px;
+}
+.round {
+  border-radius: 16px;
 }
 </style>

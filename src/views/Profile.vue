@@ -62,21 +62,26 @@
         <v-tab-item>
           <v-card class="grey lighten-4">
             <v-card-title>
-              <span class="headline">Your Organizations</span>
+              <span class="headline">Your Departments</span>
             </v-card-title>
             <v-card-text>
               <v-container>
                 <v-combobox
-                  v-model="getSelectOrg"
+                  @input="onSelectedOrg"
+                  :value="getUsrOrg"
                   outlined
                   dense
                   :items="getAllOrg"
                   item-text="name"
                   return-object
-                  label="Select your organization"
+                  multiple
+                  label="Select your department"
                 ></v-combobox>
               </v-container>
             </v-card-text>
+            <v-card-actions>
+              <v-btn color="accent">Join</v-btn>
+            </v-card-actions>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -100,27 +105,43 @@ export default {
     ...mapState("profile", ["username", "full_name", "email", "photo_url"]),
     getSelectOrg: {
       get() {
-        return ["abcd", "bcde", "efgh"];
+        return "";
       },
       set(value) {
         console.log("select value: ", value);
       }
     },
     async getAllOrg() {
+      let jwt = localStorage.getItem("jwt");
+      let getOrgResp;
+      if (jwt != null) {
+        getOrgResp = await helper.getAllOrgHelp(jwt);
+      }
+      console.log(getOrgResp);
+
+      return getOrgResp.data;
+    },
+    async getUsrOrg() {
       let user_info = localStorage.getItem("user_info");
+      let jwt = localStorage.getItem("jwt");
       let username = "";
-      if (user_info != null) {
+      let getOrgResp;
+      if (user_info != null && jwt != null) {
         user_info = JSON.parse(user_info);
         username = user_info.username;
+        getOrgResp = await helper.getUserOrgHelp(username, jwt);
       }
-      let getOrgResp = await helper.getUserOrgHelp(username);
       console.log(getOrgResp);
 
       return getOrgResp.data;
     }
   },
   methods: {
-    ...mapActions("profile", ["fetchProfile"])
+    ...mapActions("profile", ["fetchProfile"]),
+
+    onSelectedOrg(value) {
+      console.log(value);
+    }
   },
   beforeMount() {
     this.fetchProfile();
