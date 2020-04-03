@@ -70,7 +70,16 @@ export default {
                 .catch(e => e);//eslint-disable
 
         }
-
+    },
+    async commentHelp(taskId, comment, username) {
+        let data = {
+            comment: comment,
+            username: username
+        }
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments`,data)
+            .then(res => res)
+            .catch(e => e);//eslint-disable
 
     },
 }

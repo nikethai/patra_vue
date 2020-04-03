@@ -4,9 +4,9 @@ import { qsHelp } from '@/util/qsHelper'
 
 export default {
   async fetchLogged({ commit }) {
-    if (localStorage.getItem("user_info") != null) {
+    let value = localStorage.getItem("user_info");
+    if (value != null) {
       // use key name to retrieve the corresponding value
-      let value = localStorage.getItem("user_info");
       let objValue = JSON.parse(value);
 
       // console.log the iteration key and value
@@ -85,6 +85,11 @@ export default {
   async setMems({ commit }, newMem) {
     if (newMem != null) {
       commit("addMem", newMem);
+    }
+  },
+  async submitCommentActions({commit},content){
+    if (content != null){
+      commit("submitComment",content);
     }
   },
   async setSnackbar({ commit }, content) {

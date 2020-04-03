@@ -8,12 +8,12 @@
           <v-card-title class="justify-center">Checklist1</v-card-title>
           <v-card-text>
             <!-- <AddTodo /> -->
-            <Todo @refresh="getTas()"/>
+            <Todo @refresh="getTas()" />
           </v-card-text>
         </v-card>
       </v-col>
       <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
-        <TodoDescription/>
+        <TodoDescription @refresh="getTas" />
       </v-col>
     </v-row>
   </v-container>
@@ -43,7 +43,7 @@ export default {
     TodoDescription
   },
   methods: {
-    ...mapActions(["fetchTask", "getMemActions"]),
+    ...mapActions(["fetchTask"]),
     getTas() {
       this.fetchTask(this.$route.params.id);
     },
@@ -58,10 +58,10 @@ export default {
       this.dialog = false;
     }
   },
-  mounted() {
+  created() {
     this.getTas();
   },
-  asyncComputed: {
+  computed: {
     ...mapGetters(["getTaskView"])
   }
 };

@@ -15,7 +15,7 @@
     <v-navigation-drawer app v-model="drawer">
       <TheNavbarUser />
     </v-navigation-drawer>
-    <v-snackbar v-model="isSnackbar.status">
+    <v-snackbar :value="isSnackbar.status">
       {{isSnackbar.message}}
       <v-btn color="pink" text @click="isSnackbar.status = false">Close</v-btn>
     </v-snackbar>

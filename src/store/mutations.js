@@ -9,9 +9,24 @@ export default {
   editTaskView: (state, { newVal, currTask }) => {
     // let index = state.task.findIndex(x => x.taskName === currTask.taskName);
     if (state.viewTask.taskId === currTask.taskId) {
-      console.log("hello con cac");
+      console.log("Co tag id hen");
       
       state.viewTask.taskName = newVal;
+    }
+  },
+  // editTask: (state, { newVal, currTask }) => {
+  //   // let index = state.task.findIndex(x => x.taskName === currTask.taskName);
+  //   if (state.viewTask.taskId === currTask.taskId) {
+  //     console.log("hello con cac");
+      
+  //     state.viewTask.taskName = newVal;
+  //   }
+  // },
+  submitComment: (state,{taskId,content}) => {
+    if (state.viewTask.taskId === taskId && state.userInfo.name != null){
+      
+      console.log("right taskID");
+      state.viewTask.comments.push()
     }
   },
   deleteTask: (state, delItem) => {

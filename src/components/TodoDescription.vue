@@ -54,7 +54,7 @@
           v-model="editorData"
           :config="editorConfig"
         ></ckeditor>
-        <v-btn color="green" text small @click="submitComment">Submit</v-btn>
+        <v-btn color="green" text small @click="submitComment(getTaskView.taskId)">Submit</v-btn>
       </div>
     </v-container>
   </v-card>
@@ -123,9 +123,27 @@ export default {
         });
       }
     },
-    submitComment(){
-      if (this.content != null && this.content.length > 0){
-        localStorage.setItem("test",this.content);
+    async submitComment(taskId) {
+      if (this.content != null && this.content.length > 0 && taskId != null) {
+        let usrCmt = this.getUserInfo.name;
+        if (usrCmt != null) {
+         
+          let cmtResp = await helper.commentHelp(taskId, this.content, usrCmt);
+          if (cmtResp.status === 200) {
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Comment added!"
+            });
+            this.$emit("refresh");
+          } else {
+            console.log(cmtResp);
+            
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Fail to add comment!"
+            });
+          }
+        }
       }
     }
   },
@@ -133,7 +151,7 @@ export default {
     this.getUserFromOrgID();
   },
   computed: {
-    ...mapGetters(["getTaskView", "getMem"]),
+    ...mapGetters(["getTaskView", "getMem", "getUserInfo"]),
     getUsrFr: {
       get() {
         return this.getMem;
