@@ -9,6 +9,7 @@ import vuetify from "./plugins/vuetify";
 import Vuetify from "vuetify/lib";
 import AsyncComputed from 'vue-async-computed';
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import GSignInButton  from 'vue-google-signin-button'
 import "./registerServiceWorker";
 
 Vue.config.productionTip = false;
@@ -16,6 +17,7 @@ Vue.use(BootstrapVue);
 Vue.use(Vuetify);
 Vue.use(AsyncComputed);
 Vue.use(CKEditor);
+Vue.use(GSignInButton);
 Vue.component("v-alert", {});
 Vue.component("v-app", {});
 

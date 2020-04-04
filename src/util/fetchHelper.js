@@ -154,4 +154,16 @@ export default {
             .catch(e => e.response);//eslint-disable
 
     },
+    async markStatusHelp(taskId, jwt, stt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .patch(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/status?status=${stt}`, null, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
 }

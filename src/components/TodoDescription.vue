@@ -8,8 +8,38 @@
       v-if="isEditButtonClicked"
     ></v-text-field>
     <v-flex class="d-flex flex-row justify-space-around">
-      <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
-      <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-dialog v-model="doneDialog" persistent max-width="500px">
+        <template v-slot:activator="{on}">
+          <v-btn
+            v-on="on"
+            class="overline mb-0"
+            color="deep-purple darken-1"
+            text
+          >Status: {{taskStatus}}</v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Mark status</span>
+          </v-card-title>
+          <v-card-text>
+            <span>Mark your status</span>
+          </v-card-text>
+          <v-card-text>
+            <v-radio-group v-model="taskStatus" mandatory row>
+              <v-radio label="DOING" color="blue" value="DOING"></v-radio>
+              <v-radio label="DONE" color="red" value="DONE"></v-radio>
+            </v-radio-group>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="doneDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="onMarkStt">Mark</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- <div class="overline mb-0"></div> -->
+
+      <v-dialog v-model="assignDialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
           <v-btn v-on="on" class="overline" color="error" text>Assign</v-btn>
         </template>
@@ -32,7 +62,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="assignDialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="assign()">Assign</v-btn>
           </v-card-actions>
         </v-card>
@@ -89,11 +119,13 @@ export default {
   name: "tododescription",
   data() {
     return {
-      dialog: false,
+      assignDialog: false,
+      doneDialog: false,
       items: [],
       editor: InlineEditor,
       editorDisable: false,
       buttonText: "Edit",
+      taskStt: "",
       content: "",
       editorConfig: {
         // The configuration of the editor.
@@ -107,18 +139,17 @@ export default {
   },
   methods: {
     getUserFromOrgID() {
-      let mem = localStorage.getItem("mem_info");
+      let orgId = localStorage.getItem("select_org");
       let jwt = localStorage.getItem("jwt");
-      if (mem != null && jwt != null) {
+      if (orgId != null && jwt != null) {
         let config = {
           headers: {
             Authorization: `Bearer ${jwt}`
           }
         };
-        mem = JSON.parse(mem);
         axios
           .get(
-            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`,
+            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${orgId}/members`,
             config
           )
           .then(res => {
@@ -183,6 +214,34 @@ export default {
     },
     onEditorEditTask(value) {
       console.log("select value: ", value);
+    },
+    async onMarkStt() {
+      let tskId = this.getTaskView.taskId;
+      let jwt = localStorage.getItem("jwt");
+      if (
+        this.taskStt != null &&
+        this.taskStt.length &&
+        tskId != null &&
+        jwt != null
+      ) {
+        let markSttResp = await helper.markStatusHelp(tskId, jwt, this.taskStt);
+        if (markSttResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Mark status successfully!"
+          });
+          this.$emit("refresh");
+          this.doneDialog = false;
+        } else {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Fail to mark status!"
+          });
+        }
+      }
+    },
+    isEmpArr(arr) {
+      return Array.isArray(arr) && arr.length;
     }
   },
   mounted() {
@@ -193,7 +252,9 @@ export default {
       "getTaskView",
       "getMem",
       "getUserInfo",
-      "isEditButtonClicked"
+      "isEditButtonClicked",
+      "getTaskViewByIndex",
+      "allTask"
     ]),
     getUsrFr: {
       get() {
@@ -210,6 +271,26 @@ export default {
       },
       set(val) {
         this.content = val;
+      }
+    },
+    taskStatus: {
+      get() {
+        let sttId = this.allTask[this.getTaskViewByIndex].statusId;
+        if (sttId) {
+          switch (sttId) {
+            case 0:
+              return "PENDING";
+            case 1:
+              return "DOING";
+            case 3:
+              return "DONE";
+          }
+        }
+        return "";
+      },
+      set(val) {
+        console.log(val);
+        this.taskStt = val;
       }
     }
   }
