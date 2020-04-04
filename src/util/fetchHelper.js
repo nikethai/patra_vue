@@ -15,6 +15,14 @@ export default {
             .catch(e => e.response); //eslint-disable-line no-console
 
     },
+    async googleLoginHelp(token) {
+        // console.log(qs.stringify(form));
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/users/google/login`, token )
+            .then(res => res)
+            .catch(e => e.response); //eslint-disable-line no-console
+
+    },
     async userInfoHelp(jwt) {
         let info;
         if (jwt != null) {

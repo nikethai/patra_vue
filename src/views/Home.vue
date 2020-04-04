@@ -11,6 +11,12 @@
         dense
         solo
       ></v-select>
+      <v-btn class="mx-0" fab small dark color="indigo">
+        <v-icon dark>mdi-plus</v-icon>
+      </v-btn>
+      <v-btn class="mx-0" fab dark small color="red">
+        <v-icon dark>mdi-minus</v-icon>
+      </v-btn>
       <v-row>
         <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
           <v-card @click="doSomething(sheet)">
@@ -44,12 +50,19 @@ export default {
       usrOrg: [],
       select: "",
       googleSignInParams: {
-        client_id:"265164074357-8f2qcit939i1dqomo5gvq4uq31h3b7fi.apps.googleusercontent.com"
+        client_id:
+          "265164074357-8f2qcit939i1dqomo5gvq4uq31h3b7fi.apps.googleusercontent.com"
       }
     };
   },
   methods: {
-    ...mapActions(["fetchSheet", "setRegisterDialog", "setLoginDialog"]),
+    ...mapActions([
+      "fetchSheet",
+      "setRegisterDialog",
+      "setLoginDialog",
+      "fetchLogged",
+      "setSnackbar"
+    ]),
     doSomething(sheet) {
       let id = sheet.sheetId;
       localStorage.setItem("sheet_name", sheet.sheetName);
@@ -89,11 +102,44 @@ export default {
         this.usrOrg = [...getUsrOrgResp.data];
       }
     },
-    onSignInSuccess(googleUser) {
+    async onSignInSuccess(googleUser) {
       // `googleUser` is the GoogleUser object that represents the just-signed-in user.
       // See https://developers.google.com/identity/sign-in/web/reference#users
-      const profile = googleUser.getAuthResponse(); 
-      console.log(profile);
+      const resp = googleUser.getAuthResponse();
+      let userInfoResp;
+      if (resp != null) {
+        let token = resp.id_token;
+        console.log("token: ", token);
+
+        if (token.length) {
+          let data = {
+            googleIdToken: token
+          };
+          let googleLoginResp = await helper.googleLoginHelp(data);
+          if (googleLoginResp.status === 200) {
+            let jwt = googleLoginResp.headers.authorization;
+            // let jwt = localStorage.getItem("jwt");
+            userInfoResp = await helper.userInfoHelp(jwt);
+            if (userInfoResp.status === 200) {
+              localStorage.setItem("jwt", jwt);
+              localStorage.setItem(
+                "user_info",
+                JSON.stringify(userInfoResp.data)
+              );
+              this.fetchLogged();
+              this.setSnackbar({
+                status: true,
+                message: "Login Successfully!"
+              });
+            }
+          }
+        } else {
+          this.setSnackbar({
+            status: true,
+            message: "Login Failed!"
+          });
+        }
+      }
     },
     onSignInError(error) {
       // `error` contains any error occurred.
