@@ -36,7 +36,7 @@ export default {
         }
       }
       axios
-        .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheet_id}/tasks`,config)
+        .get(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheet_id}/tasks`, config)
         .then(res => {
           commit("setTask", res.data);
         })
@@ -58,7 +58,11 @@ export default {
         .then(res => {
           commit("addSheet", res.data);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+          if (e.response.status === 404) {
+            commit("addSheet", {});
+          }
+        });
     }
 
     // commit("addTask");

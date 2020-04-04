@@ -65,22 +65,35 @@
               <span class="headline">Your Departments</span>
             </v-card-title>
             <v-card-text>
+              <v-list class="grey lighten-4" v-if="usrOrg" disabled>
+                <v-list-item v-for="org in usrOrg" :key="org.orgId">
+                  <v-list-item-content>
+                    <v-list-item-title v-text="org.name"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+              <div v-if="errors.length">
+                <b>Error(s) occurred:</b>
+                <ul>
+                  <b-alert show variant="danger">
+                    <li :key="error" v-for="error in errors">{{ error }}</li>
+                  </b-alert>
+                </ul>
+              </div>
               <v-container>
                 <v-combobox
                   @input="onSelectedOrg"
-                  :value="getUsrOrg"
                   outlined
                   dense
                   :items="getAllOrg"
                   item-text="name"
                   return-object
-                  multiple
-                  label="Select your department"
+                  label="Select the department you want to join"
                 ></v-combobox>
               </v-container>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="accent">Join</v-btn>
+              <v-btn @click="onJoinButtonPressed" color="accent">Join</v-btn>
             </v-card-actions>
           </v-card>
         </v-tab-item>
@@ -98,7 +111,9 @@ export default {
   data() {
     return {
       selected: "",
-      tab: null
+      tab: null,
+      errors: [],
+      usrOrg: []
     };
   },
   asyncComputed: {
@@ -108,7 +123,7 @@ export default {
         return "";
       },
       set(value) {
-        console.log("select value: ", value);
+        console.log("called value: ", value);
       }
     },
     async getAllOrg() {
@@ -118,22 +133,26 @@ export default {
         getOrgResp = await helper.getAllOrgHelp(jwt);
       }
       console.log(getOrgResp);
-
-      return getOrgResp.data;
+      if (getOrgResp.status === 200) {
+        return getOrgResp.data;
+      }
+      return [];
     },
     async getUsrOrg() {
       let user_info = localStorage.getItem("user_info");
       let jwt = localStorage.getItem("jwt");
       let username = "";
-      let getOrgResp;
+      let getUsrOrgResp;
       if (user_info != null && jwt != null) {
         user_info = JSON.parse(user_info);
         username = user_info.username;
-        getOrgResp = await helper.getUserOrgHelp(username, jwt);
+        getUsrOrgResp = await helper.getUserOrgHelp(username, jwt);
       }
-      console.log(getOrgResp);
-
-      return getOrgResp.data;
+      console.log("get usr org ", getUsrOrgResp);
+      if (getUsrOrgResp.status === 200) {
+        this.usrOrg = [...getUsrOrgResp.data];
+      }
+      return this.usrOrg;
     }
   },
   methods: {
@@ -141,6 +160,33 @@ export default {
 
     onSelectedOrg(value) {
       console.log(value);
+      this.selected = value;
+    },
+    async onJoinButtonPressed() {
+      let jwt = localStorage.getItem("jwt");
+      let userInfo = localStorage.getItem("user_info");
+      let joinResp;
+      if (
+        this.selected != null &&
+        this.selected.orgId.length &&
+        jwt != null &&
+        userInfo != null
+      ) {
+        userInfo = JSON.parse(userInfo);
+        joinResp = await helper.addUserToOrgHelp(
+          this.selected.orgId,
+          userInfo.username,
+          jwt
+        );
+        if (joinResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Successfully Joined!"
+          });
+        } else if (joinResp.status === 500) {
+          this.errors.push("You are already in this org");
+        }
+      }
     }
   },
   beforeMount() {

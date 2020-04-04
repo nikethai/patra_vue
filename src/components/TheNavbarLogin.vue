@@ -87,21 +87,23 @@ export default {
             password: this.password
           };
           let loginResp = await helper.loginHelp(data);
-          console.log(loginResp);
+          console.log('after login info: ',loginResp);
           if (loginResp.status === 200) {
-            localStorage.setItem("jwt", loginResp.headers.authorization);
-            let jwt = localStorage.getItem("jwt");
+            let jwt = loginResp.headers.authorization;
+            // let jwt = localStorage.getItem("jwt");
             userInfoResp = await helper.userInfoHelp(jwt);
+            console.log('after get user info: ',userInfoResp);
             if (userInfoResp.status === 200) {
-              localStorage.setItem(
-                "user_info",
-                JSON.stringify(userInfoResp.data)
-              );
               memInfoResp = await helper.memInfoHelp(
-                userInfoResp.data.currMemberId,
+                userInfoResp.data.username,
                 jwt
               );
               if (memInfoResp.status === 200) {
+                localStorage.setItem("jwt", jwt);
+                localStorage.setItem(
+                  "user_info",
+                  JSON.stringify(userInfoResp.data)
+                );
                 localStorage.setItem(
                   "mem_info",
                   JSON.stringify(memInfoResp.data)
