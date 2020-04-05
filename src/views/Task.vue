@@ -1,13 +1,11 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col
-        :cols="!isEmp(getTaskView)?'md-5 nopadding-task lighten-3':'md-12 nopadding-task'"
-      >
+      <v-col :cols="!isEmp(getTaskView)?'md-5 nopadding-task lighten-3':'md-12 nopadding-task'">
         <v-card class="mx-auto lighten-3" flat>
           <v-card-title class="justify-center headline font-weight-bold">{{getSheetName}}</v-card-title>
           <v-card-text>
-            <Todo @refresh="getTas()" />
+            <Todo :sheetId="id" @refresh="getTas()" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -27,6 +25,7 @@ import { mapActions } from "vuex";
 
 export default {
   name: "task",
+  props: ["id"],
   data() {
     return {
       dialog: false,
@@ -62,9 +61,9 @@ export default {
   },
   computed: {
     ...mapGetters(["getTaskView"]),
-    getSheetName(){
+    getSheetName() {
       let sheetName = localStorage.getItem("sheet_name");
-      if (sheetName != null){
+      if (sheetName != null) {
         return sheetName;
       }
       return "";

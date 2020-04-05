@@ -10,29 +10,21 @@
               <v-col cols="4">
                 <v-row justify="center">
                   <v-avatar size="128px">
-                    <v-img src="https://randomuser.me/api/portraits/men/85.jpg"/>
+                    <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
                   </v-avatar>
                 </v-row>
-                <v-row justify="center" class="headline">
-                  {{ full_name }}
-                </v-row>
-                <v-row justify="center" class="subtitle-1">
-                  @{{ username }}
-                </v-row>
+                <v-row justify="center" class="headline">{{ full_name }}</v-row>
+                <v-row justify="center" class="subtitle-1">@{{ username }}</v-row>
               </v-col>
-              <v-col cols="6" class="">
+              <v-col cols="6" class>
                 <v-row>
                   <v-text-field label="Email" :value="email" class="title"></v-text-field>
                 </v-row>
                 <v-row>
-                  <b-button>
-                    Change email address
-                  </b-button>
+                  <b-button>Change email address</b-button>
                 </v-row>
                 <v-row>
-                  <b-button>
-                    Change password
-                  </b-button>
+                  <b-button>Change password</b-button>
                 </v-row>
               </v-col>
             </v-row>
@@ -152,6 +144,13 @@ export default {
         userInfo != null
       ) {
         userInfo = JSON.parse(userInfo);
+        console.log(
+          "username: ",
+          userInfo.username,
+          " select: ",
+          this.selected.orgId
+        );
+
         joinResp = await helper.addUserToOrgHelp(
           this.selected.orgId,
           userInfo.username,
@@ -163,6 +162,7 @@ export default {
             message: "Successfully Joined!"
           });
         } else if (joinResp.status === 500) {
+          this.errors = [];
           this.errors.push("You are already in this org");
         }
       }

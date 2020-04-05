@@ -1,6 +1,47 @@
 <template>
   <div>
-    <v-btn dense text color="info" @click="saveEdit">{{ buttonValue }}</v-btn>
+    <v-dialog max-width="600px" v-model="addDialog">
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on" class="mx-0" fab x-small dark color="indigo">
+          <v-icon dark>mdi-plus</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add Task</span>
+        </v-card-title>
+        <div v-if="errors.length">
+          <b>Please correct the following error(s):</b>
+          <ul>
+            <b-alert show variant="danger">
+              <li :key="error" v-for="error in errors">{{ error }}</li>
+            </b-alert>
+          </ul>
+        </div>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field v-model="taskName" :rules="[rules.required]" label="Task Name"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="taskDetail"
+                  auto-grow
+                  :rules="[rules.required]"
+                  label="Sheet Detail"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="addDialog = false" color="error" depressed>Cancel</v-btn>
+          <v-btn @click="onAddTask()" color="primary" depressed>Create</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <span :key="todo.id" v-for="(todo, index) in allTask">
       <v-list flat class="lighten-3">
         <v-list-item>
@@ -9,7 +50,7 @@
               <v-card-actions>
                 <v-btn
                   solo
-                  v-if="!isEditing"
+                  v-if="!isEditButtonClicked"
                   :value="todo.taskName"
                   @click="getTaskInfo(todo, index)"
                   :class="[todo.statusId === 4 ? 'is-completed' : '']"
@@ -41,16 +82,25 @@ import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "Todo",
-  props: ["todos"],
+  props: {
+    sheetId: String
+  },
   data() {
     return {
       isEditing: false,
+      taskName: "",
+      taskDetail: "",
       buttonValue: "Edit",
-      deleteDialog: false
+      deleteDialog: false,
+      addDialog: false,
+      errors: [],
+      rules: {
+        required: value => !!value || "Required."
+      }
     };
   },
   computed: {
-    ...mapGetters(["allTask", "getTaskView"])
+    ...mapGetters(["allTask", "getTaskView", "isEditButtonClicked"])
   },
   methods: {
     ...mapActions([
@@ -93,19 +143,51 @@ export default {
     getTaskInfoEdit(task) {
       this.getTask(task);
     },
-    saveEdit() {
-      if (!this.isEditing) {
-        this.buttonValue = "Save";
-        this.isEditing = true;
-        this.$store.commit("setEditButtonClick");
-      } else {
-        this.buttonValue = "Edit";
-        this.isEditing = false;
-        this.$store.commit("setEditButtonClick");
-      }
-    },
+    // saveEdit() {
+    //   if (!this.isEditing) {
+    //     this.buttonValue = "Save";
+    //     this.isEditing = true;
+    //     this.$store.commit("setEditButtonClick");
+    //   } else {
+    //     this.buttonValue = "Edit";
+    //     this.isEditing = false;
+    //     this.$store.commit("setEditButtonClick");
+    //   }
+    // },
     taskNameChanged(val, task) {
       this.editTaskActions({ newVal: val, currTask: task });
+    },
+    async onAddTask() {
+      let jwt = localStorage.getItem("jwt");
+      if (
+        this.sheetId != null &&
+        this.taskName.length &&
+        this.taskDetail.length &&
+        jwt != null
+      ) {
+        let addTaskResp = await helper.addTaskHelp(
+          this.sheetId,
+          this.taskName,
+          this.taskDetail,
+          jwt
+        );
+        if (addTaskResp.status === 200) {
+          this.$emit("refresh");
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Add Successfully!"
+          });
+          this.addDialog = false;
+          this.taskName = "";
+          this.taskDetail = "";
+        } else {
+          console.log(addTaskResp);
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Add Failed!"
+          });
+        }
+      }
     }
   }
 };

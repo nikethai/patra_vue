@@ -39,6 +39,7 @@ const router = new Router({
     {
       path: "/task/:id",
       name: "task",
+      props: true,
       meta: {
         title: "Task",
         requiresAuth: false,

@@ -164,6 +164,18 @@ export default {
             .catch(e => e.response);//eslint-disable
 
     },
+    async deleteCommentHelp(taskId, cmtId, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments/${cmtId}`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
     async addUserToOrgHelp(orgId, username, jwt) {
         let config = {
             headers: {
@@ -182,6 +194,75 @@ export default {
 
         return axios
             .post(`${process.env.VUE_APP_API_URL}/api/v0/members/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addSheetHelp(orgId, sheetName, sheetDesc, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (orgId && sheetName != null && sheetDesc != null) {
+            data = {
+                orgId: orgId,
+                privateSheet: false,
+                sheetDescription: sheetDesc,
+                sheetName: sheetName
+            };
+        }
+
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/sheets/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addTaskHelp(sheetId, taskName, taskDetail, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (sheetId && taskName != null && taskDetail != null) {
+            data = {
+                dueDate: 0,
+                sheetId: sheetId,
+                taskDescription: "a",
+                taskDetails: taskDetail,
+                taskName: taskName
+            };
+        }
+
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addTaskEditHelp(taskId, taskName, taskDetail, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (taskId && taskName != null && taskDetail != null) {
+            data = {
+                dueDate: 0,
+                taskDetails: taskDetail,
+                taskName: taskName
+            };
+        }
+
+        return axios
+            .put(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}`, data, config)
             .then(res => res)
             .catch(e => e.response);//eslint-disable
 

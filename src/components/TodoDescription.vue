@@ -1,17 +1,12 @@
 <template>
   <v-card class="mx-auto" outlined>
     <v-card-title
-      v-if="!isEditButtonClicked"
+      v-if="!isEditing "
       class="justify-center headline"
-    >{{getTaskView.taskName}}</v-card-title>
-    <v-text-field
-      solo
-      :value="getTaskView.taskName"
-      @input="onEditorEditTask"
-      v-if="isEditButtonClicked"
-    ></v-text-field>
+    >{{allTask[getTaskViewByIndex].taskName}}</v-card-title>
+    <v-text-field solo :value="getTaskView.taskName" @input="onEditTaskName" v-if="isEditing"></v-text-field>
     <v-flex class="d-flex flex-row justify-space-around">
-      <v-dialog v-model="doneDialog" persistent max-width="500px">
+      <v-dialog v-if="!isEditing" v-model="doneDialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
           <v-btn
             v-on="on"
@@ -40,8 +35,9 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-btn class="overline subtitle-1" dense text color="info" @click="saveEdit">{{ buttonValue }}</v-btn>
       <!-- <div class="overline mb-0"></div> -->
-      <v-dialog v-model="assignDialog" persistent max-width="500px">
+      <v-dialog v-if="!isEditing" v-model="assignDialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
           <v-btn
             v-on="on"
@@ -75,7 +71,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="deleteDialog" persistent max-width="290">
+      <v-dialog v-if="!isEditing" v-model="deleteDialog" persistent max-width="290">
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" class="overline subtitle-1 red--text font-weight-bold" text ripple>Delete</v-btn>
         </template>
@@ -92,25 +88,25 @@
     </v-flex>
 
     <v-card-text
-      v-if="!isEditButtonClicked"
-      v-html="getTaskView.taskDetails"
+      v-if="!isEditing "
+      v-html="allTask[getTaskViewByIndex].taskDetails"
       style="text-align: left"
     ></v-card-text>
-    <span v-if="isEditButtonClicked">
+    <span v-if="isEditing">
       <ckeditor
         :editor="editor"
         :disabled="editorDisable"
         :value="getTaskView.taskDetails"
-        @input="onEditorEditTask"
+        @input="onEditTaskDesc"
         :config="editorConfig"
       ></ckeditor>
     </span>
 
     <v-divider></v-divider>
-    <v-container class="pa-2">
+    <v-container v-if="!isEditing" class="pa-2">
       <h5>Comments</h5>
       <span v-if="getTaskView.comments && getTaskView.comments.length ">
-        <Comments />
+        <Comments @refresh="onRefresh()" />
       </span>
       <div class="border container round mb-2">
         <ckeditor
@@ -127,7 +123,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import helper from "@/util/fetchHelper.js";
 import Comments from "@/components/Comments.vue";
@@ -140,12 +136,16 @@ export default {
       assignDialog: false,
       doneDialog: false,
       deleteDialog: false,
-      items: [],
-      editor: InlineEditor,
+      isEditing: false,
       editorDisable: false,
       buttonText: "Edit",
+      buttonValue: "Edit",
+      items: [],
+      editor: InlineEditor,
       taskStt: "",
       content: "",
+      taskName: "",
+      taskDetail: "",
       editorConfig: {
         // The configuration of the editor.
         placeholder: "Write your comment...",
@@ -157,6 +157,7 @@ export default {
     Comments
   },
   methods: {
+    ...mapActions([""]),
     getUserFromOrgID() {
       let orgId = localStorage.getItem("select_org");
       let jwt = localStorage.getItem("jwt");
@@ -240,7 +241,7 @@ export default {
             status: true,
             message: "Delete Successfully!"
           });
-          this.$store.commit("getTask",{});
+          this.$store.commit("getTask", {});
           this.$emit("refresh");
         } else {
           console.log(delTaskResp);
@@ -255,9 +256,6 @@ export default {
     },
     onEditorEdit(value) {
       this.content = value;
-    },
-    onEditorEditTask(value) {
-      console.log("select value: ", value);
     },
     async onMarkStt() {
       let tskId = this.getTaskView.taskId;
@@ -296,6 +294,59 @@ export default {
         return "blue--text";
       } else if (status === 3) {
         return "success--text";
+      }
+    },
+    onRefresh() {
+      this.$emit("refresh");
+    },
+    onEditTaskDesc(value) {
+      console.log("select value: ", value);
+      this.taskDetail = value;
+    },
+    onEditTaskName(value) {
+      console.log("select value: ", value);
+      this.taskName = value;
+    },
+    async saveEdit() {
+      if (!this.isEditing) {
+        this.buttonValue = "Save";
+        this.isEditing = true;
+        this.$store.commit("setEditButtonClick");
+      } else {
+        if (this.taskName.length || this.taskDetail.length) {
+          if (!this.taskName.length) {
+            this.taskName = this.getTaskView.taskName;
+          }
+          if (!this.taskDetail.length) {
+            this.taskDetail = this.getTaskView.taskDetails;
+          }
+
+          let jwt = localStorage.getItem("jwt");
+          let taskId = this.getTaskView.taskId;
+          if (jwt != null && taskId != null) {
+            let editTaskResp = await helper.addTaskEditHelp(
+              taskId,
+              this.taskName,
+              this.taskDetail,
+              jwt
+            );
+            if (editTaskResp.status === 200) {
+              this.$store.dispatch("setSnackbar", {
+                status: true,
+                message: "Edit Successfully!"
+              });
+              this.$emit("refresh");
+            }
+          } else {
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Edit Failed!"
+            });
+          }
+        }
+        this.isEditing = false;
+        this.$store.commit("setEditButtonClick");
+        this.buttonValue = "Edit";
       }
     }
   },
