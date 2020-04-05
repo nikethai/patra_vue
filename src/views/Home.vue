@@ -1,30 +1,45 @@
 <template>
   <v-container fluid>
-    <div v-if=" getUserInfo && Object.keys(getUserInfo).length > 0">
-      <v-btn color="info" style="pointer-events: none" text>Welcome,{{ getUserInfo.name }}.</v-btn>
-      <v-select
-        :items="getUsrOrg"
-        return-object
-        item-text="name"
-        @input="onSelectOrg"
-        label="Select the organize where you want to get your sheet"
-        dense
-        solo
-      ></v-select>
-      <v-row>
-        <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-          <v-card @click="doSomething(sheet)">
-            <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
-    <div v-else>
-      <h3>Welcome to PATRA, you must login to see your checklist</h3>
-      <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
-      <h5>Don't have an account?</h5>
-      <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
-    </div>
+    <v-row justify="center">
+      <v-col cols="8">
+        <div v-if="getUserInfo && Object.keys(getUserInfo).length > 0">
+          <v-btn color="info" style="pointer-events: none" text
+            >Welcome,{{ getUserInfo.name }}.</v-btn
+          >
+          <v-select
+            :items="getUsrOrg"
+            return-object
+            item-text="name"
+            @input="onSelectOrg"
+            label="Select organization"
+            dense
+            solo
+          ></v-select>
+          <p class="title align-start d-flex"><v-icon>mdi-star</v-icon>STARED SHEETS</p>
+          <p class="title align-start d-flex"><v-icon>mdi-factory</v-icon>ORGANIZATIONS SHEETS</p>
+          <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
+            <v-container fluid>
+              <v-card @click="doSomething(sheet)">
+                <v-card-actions>
+                  <p class="d-flex align-content-start success--text subtitle-1">{{ sheet.sheetName }}</p>
+                </v-card-actions>
+                <v-card-subtitle>
+                  <v-progress-linear buffer-value="90"></v-progress-linear>
+                </v-card-subtitle>
+              </v-card>
+            </v-container>
+          </v-row>
+        </div>
+        <div v-else>
+          <h3>Login to see your collaborators worksheets</h3>
+          <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
+          <h5>Don't have an account?</h5>
+          <v-btn @click="regisIsPressed()" color="error" outlined
+            >Register</v-btn
+          >
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

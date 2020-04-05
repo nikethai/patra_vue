@@ -2,17 +2,16 @@
   <v-container fluid>
     <v-row>
       <v-col
-        :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-3':'md-12 nopadding-task'"
+        :cols="!isEmp(getTaskView)?'md-5 nopadding-task lighten-3':'md-12 nopadding-task'"
       >
-        <v-card class="mx-auto grey lighten-3" flat>
-          <v-card-title class="justify-center">{{getSheetName}}</v-card-title>
+        <v-card class="mx-auto lighten-3" flat>
+          <v-card-title class="justify-center headline font-weight-bold">{{getSheetName}}</v-card-title>
           <v-card-text>
-            <!-- <AddTodo /> -->
             <Todo @refresh="getTas()" />
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
+      <v-col v-if="!isEmp(getTaskView)" cols="md-7  pa-1">
         <TodoDescription @refresh="getTas" />
       </v-col>
     </v-row>
@@ -22,9 +21,7 @@
 <script>
 // @ is an alias to /src
 import Todo from "@/components/Todo.vue";
-import AddTodo from "@/components/AddTodo.vue";
 import TodoDescription from "@/components/TodoDescription.vue";
-import axios from "axios";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 
@@ -39,7 +36,6 @@ export default {
   },
   components: {
     Todo,
-    // AddTodo,
     TodoDescription
   },
   methods: {

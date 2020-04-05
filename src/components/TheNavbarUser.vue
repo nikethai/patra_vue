@@ -61,7 +61,7 @@ export default {
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
       { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-virus", name: "Corona", link: "/Corona" },
+      { icon: "mdi-bug", name: "Corona", link: "/Corona" },
     ],
     logoutDialog: false
   }),
