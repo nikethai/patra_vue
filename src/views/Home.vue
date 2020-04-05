@@ -11,10 +11,49 @@
         dense
         solo
       ></v-select>
-      <v-btn class="mx-0" fab small dark color="indigo">
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn class="mx-0" fab dark small color="red">
+
+      <v-dialog v-if="allSheet.length" max-width="600px" v-model="addDialog">
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" class="mx-0" fab small dark color="indigo">
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Add Sheet</span>
+          </v-card-title>
+          <div v-if="errors.length">
+            <b>Please correct the following error(s):</b>
+            <ul>
+              <b-alert show variant="danger">
+                <li :key="error" v-for="error in errors">{{ error }}</li>
+              </b-alert>
+            </ul>
+          </div>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field v-model="sheetName" :rules="[rules.required]" label="Sheet Name"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="sheetDesc"
+                    :rules="[rules.required]"
+                    label="Sheet Description"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn @click="addDialog = false" color="error" depressed>Cancel</v-btn>
+            <v-btn @click="addDialog = false" color="primary" depressed>Create</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn v-if="allSheet.length" class="mx-0" fab dark small color="red">
         <v-icon dark>mdi-minus</v-icon>
       </v-btn>
       <v-row>
@@ -49,6 +88,13 @@ export default {
     return {
       usrOrg: [],
       select: "",
+      errors: [],
+      sheetName: "",
+      sheetDesc: "",
+      addDialog: false,
+      rules: {
+        required: value => !!value || "Required."
+      },
       googleSignInParams: {
         client_id:
           "265164074357-8f2qcit939i1dqomo5gvq4uq31h3b7fi.apps.googleusercontent.com"
@@ -109,8 +155,6 @@ export default {
       let userInfoResp;
       if (resp != null) {
         let token = resp.id_token;
-        console.log("token: ", token);
-
         if (token.length) {
           let data = {
             googleIdToken: token

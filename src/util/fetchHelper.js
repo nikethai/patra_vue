@@ -15,10 +15,22 @@ export default {
             .catch(e => e.response); //eslint-disable-line no-console
 
     },
+    async logoutHelp(jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/logout`, null, config)
+            .then(res => res)
+            .catch(e => e.response); //eslint-disable-line no-console
+
+    },
     async googleLoginHelp(token) {
         // console.log(qs.stringify(form));
         return axios
-            .post(`${process.env.VUE_APP_API_URL}/api/v0/users/google/login`, token )
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/users/google/login`, token)
             .then(res => res)
             .catch(e => e.response); //eslint-disable-line no-console
 

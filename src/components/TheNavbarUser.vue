@@ -54,6 +54,7 @@
 import { mapActions, mapGetters } from "vuex";
 import TheNavbarLogin from "@/components/TheNavbarLogin.vue";
 import TheNavbarRegister from "@/components/TheNavbarRegister.vue";
+import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "TheNavbarUser",
@@ -61,7 +62,7 @@ export default {
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
       { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-virus", name: "Corona", link: "/Corona" },
+      { icon: "mdi-virus", name: "Corona", link: "/Corona" }
     ],
     logoutDialog: false
   }),
@@ -78,7 +79,12 @@ export default {
     getUser() {
       this.$router.push({ path: `/profile/${this.getUserInfo.username}` });
     },
-    logout_click() {
+    async logout_click() {
+      let jwt = localStorage.getItem("jwt");
+      if (jwt != null) {
+        let logoutResp = await helper.logoutHelp(jwt);
+        console.log(logoutResp);
+      }
       this.logout();
       location.reload();
     }
