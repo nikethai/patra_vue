@@ -1,41 +1,54 @@
 <template>
   <v-container fluid>
-    <div v-if=" getUserInfo && Object.keys(getUserInfo).length > 0">
-      <v-btn color="info" style="pointer-events: none" text>Welcome,{{ getUserInfo.name }}.</v-btn>
-      <v-select
-        :items="usrOrg"
-        return-object
-        item-text="name"
-        @input="onSelectOrg"
-        label="Select the organize where you want to get your sheet"
-        dense
-        solo
-      ></v-select>
-      <v-btn class="mx-0" fab small dark color="indigo">
-        <v-icon dark>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn class="mx-0" fab dark small color="red">
-        <v-icon dark>mdi-minus</v-icon>
-      </v-btn>
-      <v-row>
-        <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-          <v-card @click="doSomething(sheet)">
-            <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
-    <div v-else>
-      <h3>Welcome to PATRA, you must login to see your checklist</h3>
-      <g-signin-button
-        :params="googleSignInParams"
-        @success="onSignInSuccess"
-        @error="onSignInError"
-      >Sign in with Google</g-signin-button>
-      <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
-      <h5>Don't have an account?</h5>
-      <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
-    </div>
+    <v-row justify="center">
+      <v-col cols="8">
+        <div v-if="getUserInfo && Object.keys(getUserInfo).length > 0">
+          <v-btn color="info" style="pointer-events: none" text
+            >Welcome,{{ getUserInfo.name }}.</v-btn
+          >
+          <v-select
+              :items="usrOrg"
+              return-object
+              item-text="name"
+              @input="onSelectOrg"
+              label="Select the organize where you want to get your sheet"
+              dense
+              solo
+          ></v-select>
+          <v-btn class="mx-0" fab small dark color="indigo">
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
+          <v-btn class="mx-0" fab dark small color="red">
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
+          <p class="title align-start d-flex"><v-icon>mdi-star</v-icon>STARED SHEETS</p>
+          <p class="title align-start d-flex"><v-icon>mdi-factory</v-icon>ORGANIZATIONS SHEETS</p>
+          <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
+            <v-container fluid>
+              <v-card @click="doSomething(sheet)">
+                <v-card-actions>
+                  <p class="d-flex align-content-start success--text subtitle-1">{{ sheet.sheetName }}</p>
+                </v-card-actions>
+                <v-card-subtitle>
+                  <v-progress-linear buffer-value="90"></v-progress-linear>
+                </v-card-subtitle>
+              </v-card>
+            </v-container>
+          </v-row>
+        </div>
+        <div v-else>
+          <h3>Login to see your collaborators worksheets</h3>
+          <g-signin-button
+              :params="googleSignInParams"
+              @success="onSignInSuccess"
+              @error="onSignInError"
+          >Sign in with Google</g-signin-button>
+          <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
+          <h5>Don't have an account?</h5>
+          <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -75,21 +88,18 @@ export default {
       this.setRegisterDialog();
     },
     fetch_sh() {
-      // let info = localStorage.getItem("user_info");
       if (this.select != null && this.select.length) {
         localStorage.setItem("select_org", this.select);
         this.fetchSheet(this.select);
       }
-      // this.fetchSheet("5e78ed4a8af9f46f8f6bb6de");
-      // }
     },
     onSelectOrg(value) {
       this.select = value.orgId;
       this.fetch_sh();
     },
     async getUsrOrg() {
-      let user_info = localStorage.getItem("user_info");
-      let jwt = localStorage.getItem("jwt");
+      let user_info = await localStorage.getItem("user_info");
+      let jwt = await localStorage.getItem("jwt");
       let username = "";
       let getUsrOrgResp;
       if (user_info != null && jwt != null) {
@@ -145,9 +155,6 @@ export default {
       // `error` contains any error occurred.
       console.log("OH NOES", error);
     }
-  },
-  mounted() {
-    // this.fetch_sh();
   },
   computed: {
     ...mapGetters(["allSheet", "getUserInfo"])

@@ -35,7 +35,7 @@ export default {
       content: "",
       editorConfig: {
         // The configuration of the editor.
-        placeholder: "Add comment here..."
+        placeholder: "Write your comment..."
         // toolbar: [ 'bold', 'italic','underline', '|', 'undo', 'redo' ]
       }
     };

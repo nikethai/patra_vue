@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-card-title v-if="!isEditButtonClicked" class="justify-center">{{getTaskView.taskName}}</v-card-title>
+    <v-card-title v-if="!isEditButtonClicked" class="justify-center headline">{{getTaskView.taskName}}</v-card-title>
     <v-text-field
       solo
       :value="getTaskView.taskName"
@@ -38,10 +38,9 @@
         </v-card>
       </v-dialog>
       <!-- <div class="overline mb-0"></div> -->
-
-      <v-dialog v-model="assignDialog" persistent max-width="500px">
+      <v-dialog v-model="dialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
-          <v-btn v-on="on" class="overline" color="error" text>Assign</v-btn>
+          <v-btn v-on="on" class="overline subtitle-1 font-weight-bold" outlined color="blue" text>Assign</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -67,12 +66,9 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <span v-if="getUsrFr">
-        <p v-for="usr in getUsrFr" :key="usr.memberId">{{usr.username}}</p>
-      </span>
     </v-flex>
 
-    <v-card-text v-if="!isEditButtonClicked" v-html="getTaskView.taskDetails"></v-card-text>
+    <v-card-text v-if="!isEditButtonClicked" v-html="getTaskView.taskDetails" style="text-align: left"></v-card-text>
     <span v-if="isEditButtonClicked">
       <ckeditor
         :editor="editor"
@@ -84,17 +80,12 @@
     </span>
 
     <v-divider></v-divider>
-    <v-container>
+    <v-container class="pa-2">
       <h5>Comments</h5>
-      <!-- <v-row class="mx-auto">
-              <v-col cols="12" style="text-align: left">
-                
-              </v-col>
-      </v-row>-->
       <span v-if="getTaskView.comments && getTaskView.comments.length ">
         <Comments />
       </span>
-      <div class="border container round">
+      <div class="border container round mb-2">
         <ckeditor
           :editor="editor"
           :disabled="editorDisable"
@@ -102,7 +93,7 @@
           @input="onEditorEdit"
           :config="editorConfig"
         ></ckeditor>
-        <v-btn color="green" text small @click="submitComment(getTaskView.taskId)">Submit</v-btn>
+        <v-btn color="green" text small @click="submitComment(getTaskView.taskId)">Send</v-btn>
       </div>
     </v-container>
   </v-card>
@@ -129,7 +120,7 @@ export default {
       content: "",
       editorConfig: {
         // The configuration of the editor.
-        placeholder: "Add comment here...",
+        placeholder: "Write your comment...",
         toolbar: ["bold", "italic", "|", "undo", "redo"]
       }
     };
@@ -242,6 +233,17 @@ export default {
     },
     isEmpArr(arr) {
       return Array.isArray(arr) && arr.length;
+    },
+    getColor(status) {
+      if (status === 0) {
+        return 'black--text'
+      } else if (status === 1) {
+        return 'warning--text'
+      } else if (status === 2) {
+        return 'blue--text'
+      } else if (status === 3) {
+        return 'success--text'
+      }
     }
   },
   mounted() {
@@ -254,7 +256,8 @@ export default {
       "getUserInfo",
       "isEditButtonClicked",
       "getTaskViewByIndex",
-      "allTask"
+      "allTask",
+      "getTaskViewStatus"
     ]),
     getUsrFr: {
       get() {
