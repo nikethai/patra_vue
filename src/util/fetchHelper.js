@@ -152,6 +152,18 @@ export default {
             .catch(e => e.response);//eslint-disable
 
     },
+    async deleteSheetHelp(sheetId, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheetId}`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
     async addUserToOrgHelp(orgId, username, jwt) {
         let config = {
             headers: {

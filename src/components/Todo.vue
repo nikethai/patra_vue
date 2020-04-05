@@ -16,9 +16,7 @@
                   class="container"
                   text
                   :color="getColor(todo.statusId)"
-                >
-                  {{ todo.taskName }}
-                </v-btn>
+                >{{ todo.taskName }}</v-btn>
               </v-card-actions>
               <v-card-subtitle class="d-flex pb-0 pe-0 justify-content-end">
                 <v-badge class="mx-2" v-if="todo.comments" :content="todo.comments.length">
@@ -31,27 +29,6 @@
               </v-card-subtitle>
             </v-card>
           </v-list-item-content>
-
-          <v-dialog v-model="deleteDialog" persistent max-width="290">
-            <template v-slot:activator="{ on }">
-              <v-btn v-on="on" icon ripple>
-                <v-icon color="red">mdi-close-circle</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>Delete this task?</v-card-title>
-              <v-card-subtitle>This action cannot be reverted!</v-card-subtitle>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="green darken-1" text @click="deleteDialog = false"
-                  >No</v-btn
-                >
-                <v-btn color="red darken-1" text @click="deleteTask(todo)"
-                  >Yes</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-list-item>
       </v-list>
     </span>
@@ -103,28 +80,6 @@ export default {
       } else {
         return false;
       }
-    },
-    async deleteTask(id) {
-      let jwt = localStorage.getItem("jwt");
-      if (id != null && jwt != null) {
-        let tskID = id.taskId;
-        let delTaskResp = await helper.deleteTaskHelp(tskID, jwt);
-        if (delTaskResp.status === 200) {
-          this.$store.dispatch("setSnackbar", {
-            status: true,
-            message: "Delete Successfully!"
-          });
-          this.$emit("refresh");
-        } else {
-          console.log(delTaskResp);
-          this.$store.dispatch("setSnackbar", {
-            status: true,
-            message: "Delete Failed!"
-          });
-        }
-      }
-      // this.delTask(id); //not change in state anymore
-      this.deleteDialog = false;
     },
     doSomething() {
       console.log("Blur event triggered");

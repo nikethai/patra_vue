@@ -1,86 +1,9 @@
 <template>
   <v-container fluid>
-    <div v-if=" getUserInfo && Object.keys(getUserInfo).length > 0">
-      <v-btn color="info" style="pointer-events: none" text>Welcome,{{ getUserInfo.name }}.</v-btn>
-      <v-select
-        :items="usrOrg"
-        return-object
-        item-text="name"
-        @input="onSelectOrg"
-        label="Select the organize where you want to get your sheet"
-        dense
-        solo
-      ></v-select>
-
-      <v-dialog v-if="allSheet.length" max-width="600px" v-model="addDialog">
-        <template v-slot:activator="{ on }">
-          <v-btn v-on="on" class="mx-0" fab small dark color="indigo">
-            <v-icon dark>mdi-plus</v-icon>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">Add Sheet</span>
-          </v-card-title>
-          <div v-if="errors.length">
-            <b>Please correct the following error(s):</b>
-            <ul>
-              <b-alert show variant="danger">
-                <li :key="error" v-for="error in errors">{{ error }}</li>
-              </b-alert>
-            </ul>
-          </div>
-          <v-card-text>
-            <v-container>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field v-model="sheetName" :rules="[rules.required]" label="Sheet Name"></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    v-model="sheetDesc"
-                    :rules="[rules.required]"
-                    label="Sheet Description"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="addDialog = false" color="error" depressed>Cancel</v-btn>
-            <v-btn @click="addDialog = false" color="primary" depressed>Create</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-btn v-if="allSheet.length" class="mx-0" fab dark small color="red">
-        <v-icon dark>mdi-minus</v-icon>
-      </v-btn>
-      <v-row>
-        <v-col :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-          <v-card @click="doSomething(sheet)">
-            <v-btn color="success" text>{{ sheet.sheetName }}</v-btn>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
-    <div v-else>
-      <h3>Welcome to PATRA, you must login to see your checklist</h3>
-      <g-signin-button
-        :params="googleSignInParams"
-        @success="onSignInSuccess"
-        @error="onSignInError"
-      >Sign in with Google</g-signin-button>
-      <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
-      <h5>Don't have an account?</h5>
-      <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
-    </div>
     <v-row justify="center">
       <v-col cols="8">
         <div v-if="getUserInfo && Object.keys(getUserInfo).length > 0">
-          <v-btn color="info" style="pointer-events: none" text
-            >Welcome,{{ getUserInfo.name }}.</v-btn
-          >
+          <v-btn color="info" style="pointer-events: none" text>Welcome,{{ getUserInfo.name }}.</v-btn>
           <v-select
             :items="usrOrg"
             return-object
@@ -94,7 +17,7 @@
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
           <v-btn class="mx-0" fab dark small color="red">
-            <v-icon dark>mdi-minus</v-icon>
+            <v-icon @click="isDelete = !isDelete" dark>mdi-minus</v-icon>
           </v-btn>
           <p class="title align-start d-flex">
             <v-icon>mdi-star</v-icon>STARED SHEETS
@@ -102,22 +25,57 @@
           <p class="title align-start d-flex">
             <v-icon>mdi-factory</v-icon>ORGANIZATIONS SHEETS
           </p>
-          <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
-            <v-container fluid>
-              <v-card @click="doSomething(sheet)">
-                <v-card-actions>
-                  <p
-                    class="d-flex align-content-start success--text subtitle-1"
-                  >
-                    {{ sheet.sheetName }}
-                  </p>
-                </v-card-actions>
+          <span v-if="!isDelete">
+            <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
+              <v-container fluid>
+                <v-card @click="doSomething(sheet)">
+                  <v-card-actions>
+                    <p
+                      class="d-flex align-content-start success--text subtitle-1"
+                    >{{ sheet.sheetName }}</p>
+                  </v-card-actions>
+                  <v-card-subtitle>
+                    <p
+                      class="d-flex align-content-start info--text subtitle-2"
+                    >{{sheet.sheetDescription}}</p>
+                    <v-progress-linear buffer-value="90"></v-progress-linear>
+                  </v-card-subtitle>
+                </v-card>
+              </v-container>
+            </v-row>
+          </span>
+          <span v-else>
+            <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
+              <v-container fluid>
+                <v-card color="red lighten-3" @click.stop="openDeleteDialog(sheet)">
+                  <v-card-actions>
+                    <p
+                      class="d-flex align-content-start success--text subtitle-1"
+                    >{{ sheet.sheetName }}</p>
+                  </v-card-actions>
+                  <v-card-subtitle>
+                    <p
+                      class="d-flex align-content-start info--text subtitle-2"
+                    >{{sheet.sheetDescription}}</p>
+                    <v-progress-linear buffer-value="90"></v-progress-linear>
+                  </v-card-subtitle>
+                </v-card>
+              </v-container>
+            </v-row>
+            <v-dialog v-model="deleteDialog" persistent max-width="290">
+              <v-card>
+                <v-card-title>Delete this sheet?</v-card-title>
                 <v-card-subtitle>
-                  <v-progress-linear buffer-value="90"></v-progress-linear>
+                  <b>This action cannot be reverted!</b>
                 </v-card-subtitle>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="deleteDialog = false">No</v-btn>
+                  <v-btn color="red darken-1" text @click="deleteTask()">Yes</v-btn>
+                </v-card-actions>
               </v-card>
-            </v-container>
-          </v-row>
+            </v-dialog>
+          </span>
         </div>
         <div v-else>
           <h3>Sign in to see your collaborators worksheets</h3>
@@ -136,13 +94,13 @@
                       <small>Sign in with</small>
                     </div>
                     <div class="btn-wrapper text-center">
-                      <base-button type="neutral" outline>
-                        <img slot="icon" src="img/icons/github.svg" />
-                        Github
-                      </base-button>
                       <base-button type="neutral">
                         <img slot="icon" src="img/icons/google.svg" />
-                        Google
+                        <g-signin-button
+                          :params="googleSignInParams"
+                          @success="onSignInSuccess"
+                          @error="onSignInError"
+                        >Google</g-signin-button>
                       </base-button>
                     </div>
                   </template>
@@ -150,39 +108,13 @@
                     <div class="text-center text-muted mb-4">
                       <small>Or sign in with credentials</small>
                     </div>
-                    <form role="form">
-                      <base-input
-                        alternative
-                        class="mb-3"
-                        placeholder="Username or email"
-                        addon-left-icon="mdi-account"
-                      >
-                      </base-input>
-                      <base-input
-                        alternative
-                        type="password"
-                        placeholder="Password"
-                        addon-left-icon="mdi-lock"
-                      >
-                      </base-input>
-                      <base-checkbox>
-                        Remember me
-                      </base-checkbox>
-                      <div class="text-center">
-                        <base-button type="primary" class="my-4"
-                          >Sign In</base-button
-                        >
-                      </div>
-                    </form>
+                    <div class="text-center">
+                      <base-button type="primary" @click="loginIsPressed()" class="my-4">Sign In</base-button>
+                    </div>
                     <v-card-subtitle>
                       <v-row no-gutters>
-                        <v-col cols="6">
-                          <a href="#" class="text-light-blue">
-                            <small>Forgot password?</small>
-                          </a>
-                        </v-col>
-                        <v-col cols="6">
-                          <a href="#" class="text-light-blue">
+                        <v-col cols="12">
+                          <a @click="regisIsPressed()" class="text-light-blue">
                             <small>Register</small>
                           </a>
                         </v-col>
@@ -193,12 +125,6 @@
               </div>
             </div>
           </div>
-          <g-signin-button
-            :params="googleSignInParams"
-            @success="onSignInSuccess"
-            @error="onSignInError"
-            >Sign in with Google</g-signin-button
-          >
         </div>
       </v-col>
     </v-row>
@@ -214,7 +140,7 @@ import BaseInput from "../components/BaseInput";
 
 export default {
   name: "Home",
-  components: { BaseInput, BaseCheckbox, BaseButton },
+  components: { BaseButton },
   data() {
     return {
       usrOrg: [],
@@ -223,6 +149,9 @@ export default {
       sheetName: "",
       sheetDesc: "",
       addDialog: false,
+      isDelete: false,
+      deleteDialog: false,
+      deleteSheetId: '',
       rules: {
         required: value => !!value || "Required."
       },
@@ -316,10 +245,38 @@ export default {
     onSignInError(error) {
       // `error` contains any error occurred.
       console.log("OH NOES", error);
-    }
+    },
+    openDeleteDialog(sheet){
+      this.deleteSheetId = sheet.sheetId;
+      this.deleteDialog = true;
+    },
+    async deleteTask(){
+      let jwt = localStorage.getItem("jwt");
+
+      if (this.deleteSheetId != null && this.deleteSheetId.length && jwt != null) {
+        let delSheetResp = await helper.deleteSheetHelp(this.deleteSheetId, jwt);
+        if (delSheetResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Successfully!"
+          });
+          this.deleteDialog = false;
+          this.fetch_sh();
+        } else {
+          console.log(delSheetResp);
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Failed!"
+          });
+        }
+      }
+    },
   },
   computed: {
     ...mapGetters(["allSheet", "getUserInfo"])
+  },
+  mounted() {
+    this.getUsrOrg();
   },
   watch: {
     getUserInfo: function() {
@@ -330,13 +287,4 @@ export default {
 </script>
 
 <style scoped>
-.g-signin-button {
-  /* This is where you control how the button looks. Be creative! */
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 3px;
-  background-color: #3c82f7;
-  color: #fff;
-  box-shadow: 0 3px 0 #0f69ff;
-}
 </style>

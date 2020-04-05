@@ -15,7 +15,7 @@
     <v-navigation-drawer app v-model="drawer">
       <TheNavbarUser />
     </v-navigation-drawer>
-    <v-snackbar :value="isSnackbar.status">
+    <v-snackbar :timeout="timeoutSnack" :value="isSnackbar.status" @input="closeSnackr">
       {{isSnackbar.message}}
       <v-btn color="pink" text @click="closeSnackr">Close</v-btn>
     </v-snackbar>
@@ -34,7 +34,8 @@ export default {
     TheNavbarUser
   },
   data: () => ({
-    drawer: false
+    drawer: false,
+    timeoutSnack:2000,
   }),
   methods: {
     getHome() {

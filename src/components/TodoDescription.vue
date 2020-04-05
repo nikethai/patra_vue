@@ -1,6 +1,9 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-card-title v-if="!isEditButtonClicked" class="justify-center headline">{{getTaskView.taskName}}</v-card-title>
+    <v-card-title
+      v-if="!isEditButtonClicked"
+      class="justify-center headline"
+    >{{getTaskView.taskName}}</v-card-title>
     <v-text-field
       solo
       :value="getTaskView.taskName"
@@ -38,9 +41,15 @@
         </v-card>
       </v-dialog>
       <!-- <div class="overline mb-0"></div> -->
-      <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-dialog v-model="assignDialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
-          <v-btn v-on="on" class="overline subtitle-1 font-weight-bold" outlined color="blue" text>Assign</v-btn>
+          <v-btn
+            v-on="on"
+            class="overline subtitle-1 font-weight-bold"
+            outlined
+            color="blue"
+            text
+          >Assign</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -66,9 +75,27 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="deleteDialog" persistent max-width="290">
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" class="overline subtitle-1 red--text font-weight-bold" text ripple>Delete</v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Delete this task?</v-card-title>
+          <v-card-subtitle>This action cannot be reverted!</v-card-subtitle>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="deleteDialog = false">No</v-btn>
+            <v-btn color="red darken-1" text @click="deleteTask()">Yes</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-flex>
 
-    <v-card-text v-if="!isEditButtonClicked" v-html="getTaskView.taskDetails" style="text-align: left"></v-card-text>
+    <v-card-text
+      v-if="!isEditButtonClicked"
+      v-html="getTaskView.taskDetails"
+      style="text-align: left"
+    ></v-card-text>
     <span v-if="isEditButtonClicked">
       <ckeditor
         :editor="editor"
@@ -112,6 +139,7 @@ export default {
     return {
       assignDialog: false,
       doneDialog: false,
+      deleteDialog: false,
       items: [],
       editor: InlineEditor,
       editorDisable: false,
@@ -154,7 +182,7 @@ export default {
       }
     },
     async assign() {
-      this.dialog = false;
+      this.assignDialog = false;
       let taskID = this.getTaskView.taskId;
       let assigneeSelected = this.getMem;
       let assignResp = await helper.assignHelper(taskID, assigneeSelected);
@@ -163,6 +191,7 @@ export default {
           status: true,
           message: "Assign Successfully!"
         });
+        this.$emit("refresh");
       } else {
         this.$store.dispatch("setSnackbar", {
           status: true,
@@ -200,6 +229,30 @@ export default {
         }
       }
     },
+    async deleteTask() {
+      let jwt = localStorage.getItem("jwt");
+      let taskID = this.getTaskView.taskId;
+
+      if (taskID != null && jwt != null) {
+        let delTaskResp = await helper.deleteTaskHelp(taskID, jwt);
+        if (delTaskResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Successfully!"
+          });
+          this.$store.commit("getTask",{});
+          this.$emit("refresh");
+        } else {
+          console.log(delTaskResp);
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Failed!"
+          });
+        }
+      }
+      // this.delTask(id); //not change in state anymore
+      this.deleteDialog = false;
+    },
     onEditorEdit(value) {
       this.content = value;
     },
@@ -236,13 +289,13 @@ export default {
     },
     getColor(status) {
       if (status === 0) {
-        return 'black--text'
+        return "black--text";
       } else if (status === 1) {
-        return 'warning--text'
+        return "warning--text";
       } else if (status === 2) {
-        return 'blue--text'
+        return "blue--text";
       } else if (status === 3) {
-        return 'success--text'
+        return "success--text";
       }
     }
   },
