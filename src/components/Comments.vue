@@ -4,14 +4,14 @@
     class="d-flex flex-column"
     style="text-align: left"
   >
-    <v-card v-for="cmt in allTask[getTaskViewByIndex].comments" :key="cmt.id" tile>
+    <v-card v-for="cmt in allTask[getTaskViewByIndex].comments" :key="cmt.id" class="pa-1 mb-2">
       <v-row no-gutters>
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>{{cmt.username}}</v-list-item-title>
-        </v-list-item-content>
+        <v-card-text>
+          <v-avatar>
+            <v-img  contain src="https://randomuser.me/api/portraits/men/85.jpg" max-height="30px" max-width="30px"/>
+          </v-avatar>
+          <span>{{ cmt.username }}</span>
+        </v-card-text>
       </v-row>
       <v-row no-gutters>
         <v-container>

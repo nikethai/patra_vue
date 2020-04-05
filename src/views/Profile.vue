@@ -6,55 +6,34 @@
       <v-tabs-items v-model="tab">
         <v-tab-item>
           <v-card flat>
-            <v-row align-center class="mx-auto grey lighten-4">
-              <v-col cols="12" md="6">
-                <v-list-item-content>
-                  <v-list-item-title>Photo</v-list-item-title>
-                </v-list-item-content>
+            <v-row justify="center" class="pt-5">
+              <v-col cols="4">
+                <v-row justify="center">
+                  <v-avatar size="128px">
+                    <v-img src="https://randomuser.me/api/portraits/men/85.jpg"/>
+                  </v-avatar>
+                </v-row>
+                <v-row justify="center" class="headline">
+                  {{ full_name }}
+                </v-row>
+                <v-row justify="center" class="subtitle-1">
+                  @{{ username }}
+                </v-row>
               </v-col>
-              <v-col cols="12" md="6">
-                <v-list-item-avatar>
-                  <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
-                </v-list-item-avatar>
-                <v-list-item-action>
-                  <v-btn color="grey" dark outlined>Change</v-btn>
-                </v-list-item-action>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-list-item-content>
-                  <v-list-item-title>Password</v-list-item-title>
-                </v-list-item-content>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn color="error" outlined text>Reset Password?</v-btn>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-list-item-content>
-                  <v-list-item-title>Email</v-list-item-title>
-                </v-list-item-content>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn
-                  color="purple lighten-3"
-                  large
-                  outlined
-                  style="pointer-events: none"
-                  text
-                >{{ email }}</v-btn>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-list-item-content>
-                  <v-list-item-title>Full Name</v-list-item-title>
-                </v-list-item-content>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn
-                  color="blue "
-                  large
-                  outlined
-                  style="pointer-events: none"
-                  text
-                >{{ full_name }}</v-btn>
+              <v-col cols="6" class="">
+                <v-row>
+                  <v-text-field label="Email" :value="email" class="title"></v-text-field>
+                </v-row>
+                <v-row>
+                  <b-button>
+                    Change email address
+                  </b-button>
+                </v-row>
+                <v-row>
+                  <b-button>
+                    Change password
+                  </b-button>
+                </v-row>
               </v-col>
             </v-row>
           </v-card>

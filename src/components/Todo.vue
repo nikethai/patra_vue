@@ -1,42 +1,35 @@
 <template>
   <div>
-    <v-btn dense text color="info" @click="saveEdit">{{buttonValue}}</v-btn>
-    <span :key="todo.id" v-for="(todo,index) in allTask">
-      <v-list flat class="grey lighten-3">
+    <v-btn dense text color="info" @click="saveEdit">{{ buttonValue }}</v-btn>
+    <span :key="todo.id" v-for="(todo, index) in allTask">
+      <v-list flat class="lighten-3">
         <v-list-item>
-          <!-- <v-list-item-action>
-            <v-checkbox
-              :false-value="0"
-              :true-value="1"
-              off-icon="mdi-checkbox-blank-circle-outline"
-              on-icon="mdi-check-circle"
-              v-model="todo.status_id"
-            ></v-checkbox>
-          </v-list-item-action>-->
           <v-list-item-content>
-            <v-list-item-title>
-              <span
-                solo
-                v-if="!isEditing"
-                :value="todo.taskName"
-                @click="getTaskInfo(todo,index)"
-                :class="[todo.status_id ? 'is-completed':'']"
-                class="border container round"
-              >{{ todo.taskName }}</span>
-              <v-text-field
-                solo
-                :value="todo.taskName"
-                @input="taskNameChanged($event,todo)"
-                @click="getTaskInfoEdit(todo)"
-                @blur="doSomething"
-                v-if="isEditing"
-              ></v-text-field>
-              <!-- <span
-                  :class="{ 'is-completed': todo.status_id }"
-                  @click="getTaskInfo(todo)"
-                  >{{ todo.taskName }}</span
-              >-->
-            </v-list-item-title>
+            <v-card>
+              <v-card-actions>
+                <v-btn
+                  solo
+                  v-if="!isEditing"
+                  :value="todo.taskName"
+                  @click="getTaskInfo(todo, index)"
+                  :class="[todo.statusId === 4 ? 'is-completed' : '']"
+                  class="container"
+                  text
+                  :color="getColor(todo.statusId)"
+                >
+                  {{ todo.taskName }}
+                </v-btn>
+              </v-card-actions>
+              <v-card-subtitle class="d-flex pb-0 pe-0 justify-content-end">
+                <v-badge class="mx-2" v-if="todo.comments" :content="todo.comments.length">
+                  <v-icon small color="grey">mdi-comment</v-icon>
+                </v-badge>
+                <v-badge class="mx-2" v-if="todo.assignee" :content="todo.assignee.length">
+                  <v-icon small color="grey">mdi-account</v-icon>
+                </v-badge>
+                <v-icon class="mx-2" color="grey" v-if="isAssigned(todo)">mdi-eye</v-icon>
+              </v-card-subtitle>
+            </v-card>
           </v-list-item-content>
 
           <v-dialog v-model="deleteDialog" persistent max-width="290">
@@ -50,19 +43,18 @@
               <v-card-subtitle>This action cannot be reverted!</v-card-subtitle>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="green darken-1" text @click="deleteDialog = false">No</v-btn>
-                <v-btn color="red darken-1" text @click="deleteTask(todo)">Yes</v-btn>
+                <v-btn color="green darken-1" text @click="deleteDialog = false"
+                  >No</v-btn
+                >
+                <v-btn color="red darken-1" text @click="deleteTask(todo)"
+                  >Yes</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-list-item>
       </v-list>
     </span>
-    <!-- <ul v-for="todo in allTask" :key="todo.id" class="todo-list">
-          <li>
-            <TodoItem v-bind:todo="todo" />
-          </li>
-    </ul>-->
   </div>
 </template>
 
@@ -91,11 +83,32 @@ export default {
       "editTaskActions",
       "getTaskByIndex"
     ]),
+    getColor(status) {
+      if (status === 0) {
+        return "black";
+      } else if (status === 1) {
+        return "warning";
+      } else if (status === 2) {
+        return "blue";
+      } else if (status === 3) {
+        return "success";
+      }
+    },
+    async isAssigned(todo) {
+      if (todo) {
+        const username = await localStorage.getItem("username");
+        if (todo.assignee.includes(username)) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    },
     async deleteTask(id) {
       let jwt = localStorage.getItem("jwt");
       if (id != null && jwt != null) {
         let tskID = id.taskId;
-        let delTaskResp = await helper.deleteTaskHelp(tskID,jwt);
+        let delTaskResp = await helper.deleteTaskHelp(tskID, jwt);
         if (delTaskResp.status === 200) {
           this.$store.dispatch("setSnackbar", {
             status: true,
