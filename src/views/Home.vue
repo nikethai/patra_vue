@@ -7,13 +7,13 @@
             >Welcome,{{ getUserInfo.name }}.</v-btn
           >
           <v-select
-              :items="usrOrg"
-              return-object
-              item-text="name"
-              @input="onSelectOrg"
-              label="Select the organize where you want to get your sheet"
-              dense
-              solo
+            :items="usrOrg"
+            return-object
+            item-text="name"
+            @input="onSelectOrg"
+            label="Select the organize where you want to get your sheet"
+            dense
+            solo
           ></v-select>
           <v-btn class="mx-0" fab small dark color="indigo">
             <v-icon dark>mdi-plus</v-icon>
@@ -21,13 +21,21 @@
           <v-btn class="mx-0" fab dark small color="red">
             <v-icon dark>mdi-minus</v-icon>
           </v-btn>
-          <p class="title align-start d-flex"><v-icon>mdi-star</v-icon>STARED SHEETS</p>
-          <p class="title align-start d-flex"><v-icon>mdi-factory</v-icon>ORGANIZATIONS SHEETS</p>
+          <p class="title align-start d-flex">
+            <v-icon>mdi-star</v-icon>STARED SHEETS
+          </p>
+          <p class="title align-start d-flex">
+            <v-icon>mdi-factory</v-icon>ORGANIZATIONS SHEETS
+          </p>
           <v-row :key="sheet.id" cols="12" md="4" v-for="sheet in allSheet">
             <v-container fluid>
               <v-card @click="doSomething(sheet)">
                 <v-card-actions>
-                  <p class="d-flex align-content-start success--text subtitle-1">{{ sheet.sheetName }}</p>
+                  <p
+                    class="d-flex align-content-start success--text subtitle-1"
+                  >
+                    {{ sheet.sheetName }}
+                  </p>
                 </v-card-actions>
                 <v-card-subtitle>
                   <v-progress-linear buffer-value="90"></v-progress-linear>
@@ -37,15 +45,85 @@
           </v-row>
         </div>
         <div v-else>
-          <h3>Login to see your collaborators worksheets</h3>
+          <h3>Sign in to see your collaborators worksheets</h3>
+          <div class="container pt-lg-md">
+            <div class="row justify-content-center">
+              <div class="col-lg-5">
+                <v-card
+                  type="secondary"
+                  shadow
+                  header-classes="bg-white pb-5"
+                  body-classes="px-lg-5 py-lg-5"
+                  class="border-0 pa-2"
+                >
+                  <template>
+                    <div class="text-muted text-center mb-3">
+                      <small>Sign in with</small>
+                    </div>
+                    <div class="btn-wrapper text-center">
+                      <base-button type="neutral" outline>
+                        <img slot="icon" src="img/icons/github.svg" />
+                        Github
+                      </base-button>
+                      <base-button type="neutral">
+                        <img slot="icon" src="img/icons/google.svg" />
+                        Google
+                      </base-button>
+                    </div>
+                  </template>
+                  <template>
+                    <div class="text-center text-muted mb-4">
+                      <small>Or sign in with credentials</small>
+                    </div>
+                    <form role="form">
+                      <base-input
+                        alternative
+                        class="mb-3"
+                        placeholder="Username or email"
+                        addon-left-icon="mdi-account"
+                      >
+                      </base-input>
+                      <base-input
+                        alternative
+                        type="password"
+                        placeholder="Password"
+                        addon-left-icon="mdi-lock"
+                      >
+                      </base-input>
+                      <base-checkbox>
+                        Remember me
+                      </base-checkbox>
+                      <div class="text-center">
+                        <base-button type="primary" class="my-4"
+                          >Sign In</base-button
+                        >
+                      </div>
+                    </form>
+                    <v-card-subtitle>
+                      <v-row no-gutters>
+                        <v-col cols="6">
+                          <a href="#" class="text-light-blue">
+                            <small>Forgot password?</small>
+                          </a>
+                        </v-col>
+                        <v-col cols="6">
+                          <a href="#" class="text-light-blue">
+                            <small>Register</small>
+                          </a>
+                        </v-col>
+                      </v-row>
+                    </v-card-subtitle>
+                  </template>
+                </v-card>
+              </div>
+            </div>
+          </div>
           <g-signin-button
-              :params="googleSignInParams"
-              @success="onSignInSuccess"
-              @error="onSignInError"
-          >Sign in with Google</g-signin-button>
-          <v-btn @click="loginIsPressed()" color="warning">Login</v-btn>
-          <h5>Don't have an account?</h5>
-          <v-btn @click="regisIsPressed()" color="error" outlined>Register</v-btn>
+            :params="googleSignInParams"
+            @success="onSignInSuccess"
+            @error="onSignInError"
+            >Sign in with Google</g-signin-button
+          >
         </div>
       </v-col>
     </v-row>
@@ -55,9 +133,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import helper from "@/util/fetchHelper.js";
+import BaseButton from "../components/BaseButton";
+import BaseCheckbox from "../components/BaseCheckbox";
+import BaseInput from "../components/BaseInput";
 
 export default {
   name: "Home",
+  components: { BaseInput, BaseCheckbox, BaseButton },
   data() {
     return {
       usrOrg: [],
@@ -167,8 +249,7 @@ export default {
 };
 </script>
 
-<style scoped
->
+<style scoped>
 .g-signin-button {
   /* This is where you control how the button looks. Be creative! */
   display: inline-block;
