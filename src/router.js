@@ -42,7 +42,7 @@ const router = new Router({
       props: true,
       meta: {
         title: "Task",
-        requiresAuth: false,
+        requiresAuth: true,
       },
       component: () => import("./views/Task.vue")
     },
@@ -50,7 +50,7 @@ const router = new Router({
       path: "/profile/:username?",
       name: "profile",
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
         title: "User profile"
       },
 

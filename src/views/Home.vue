@@ -13,7 +13,7 @@
             dense
             solo
           ></v-select>
-          <v-dialog v-if="allSheet.length" max-width="600px" v-model="addDialog">
+          <v-dialog v-if="select.length" max-width="600px" v-model="addDialog">
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" class="mx-0" fab small dark color="indigo">
                 <v-icon dark>mdi-plus</v-icon>

@@ -61,7 +61,6 @@ export default {
   data: () => ({
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
-      { icon: "mdi-information", name: "About", link: "/About" },
       { icon: "mdi-bug", name: "Corona", link: "/Corona" },
     ],
     logoutDialog: false
