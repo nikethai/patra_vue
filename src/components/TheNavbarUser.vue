@@ -21,14 +21,20 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
-    <v-list-item @click="logout_click()">
-      <v-list-item-icon>
-        <v-icon>mdi-logout</v-icon>
-      </v-list-item-icon>
-      <v-list-item-content>
-        <v-list-item-title>Logout</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+
+    <v-dialog v-model="logoutDialog" persistent max-width="290">
+      <template v-slot:activator="{ on }">
+        <v-btn color="error" text v-on="on">Logout</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>Do you want to logout?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="dialog = false">No</v-btn>
+          <v-btn color="red darken-1" text @click="logout_click">Yes</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
   <div v-else>
     <v-list-item @click="doSomething()" class="px-2">
@@ -48,17 +54,16 @@
 import { mapActions, mapGetters } from "vuex";
 import TheNavbarLogin from "@/components/TheNavbarLogin.vue";
 import TheNavbarRegister from "@/components/TheNavbarRegister.vue";
+import helper from "@/util/fetchHelper.js";
 
 export default {
   name: "TheNavbarUser",
   data: () => ({
     item: [
       { icon: "mdi-home-circle", name: "Home", link: "/" },
-      { icon: "mdi-information", name: "About", link: "/About" },
-      { icon: "mdi-account-circle", name: "User", link: "/Users" },
-      { icon: "mdi-virus", name: "Corona", link: "/Corona" },
-      { icon: "mdi-calendar-check", name: "Task", link: "/Task" }
-    ]
+      { icon: "mdi-bug", name: "Corona", link: "/Corona" },
+    ],
+    logoutDialog: false
   }),
   components: {
     TheNavbarLogin,
@@ -71,9 +76,14 @@ export default {
       this.setLoginDialog();
     },
     getUser() {
-      this.$router.push("users");
+      this.$router.push({ path: `/profile/${this.getUserInfo.username}` });
     },
-    logout_click() {
+    async logout_click() {
+      let jwt = localStorage.getItem("jwt");
+      if (jwt != null) {
+        let logoutResp = await helper.logoutHelp(jwt);
+        console.log(logoutResp);
+      }
       this.logout();
       location.reload();
     }

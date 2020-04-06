@@ -21,10 +21,11 @@
             <v-row>
               <v-text-field
                 v-model="password"
-                :rules="[rules.required,rules.min]"
+                :rules="[rules.required]"
                 :append-icon="passShow ? 'mdi-eye' : 'mdi-eye-off'"
                 label="Password*"
                 :type="passShow ? 'text' : 'password'"
+                @keypress.enter="logg"
                 @click:append="passShow =! passShow"
               ></v-text-field>
             </v-row>
@@ -78,50 +79,57 @@ export default {
     async logg() {
       this.errors = [];
       if (this.username && this.password) {
-        let userInfoResp;
-        let memInfoResp;
-        let data = {
-          username: this.username,
-          password: this.password
-        };
-        let loginResp = await helper.loginHelp(data);
-        console.log(loginResp);
-        if (loginResp.status === 200) {
-          localStorage.setItem("jwt", loginResp.headers.authorization);
-          let jwt = localStorage.getItem("jwt");
-          userInfoResp = await helper.userInfoHelp(jwt);
-          if (userInfoResp.status === 200) {
-            localStorage.setItem(
-              "user_info",
-              JSON.stringify(userInfoResp.data)
-            );
-            memInfoResp = await helper.memInfoHelp(
-              userInfoResp.data.currMemberId
-            );
-            if (memInfoResp.status === 200) {
-              localStorage.setItem(
-                "mem_info",
-                JSON.stringify(memInfoResp.data)
+        if (this.password.length >= 8) {
+          let userInfoResp;
+          let memInfoResp;
+          let data = {
+            username: this.username,
+            password: this.password
+          };
+          let loginResp = await helper.loginHelp(data);
+          console.log('after login info: ',loginResp);
+          if (loginResp.status === 200) {
+            let jwt = loginResp.headers.authorization;
+            // let jwt = localStorage.getItem("jwt");
+            userInfoResp = await helper.userInfoHelp(jwt);
+            console.log('after get user info: ',userInfoResp);
+            if (userInfoResp.status === 200) {
+              memInfoResp = await helper.memInfoHelp(
+                userInfoResp.data.username,
+                jwt
               );
-              this.fetchLogged();
-              this.setLoginDialog();
-              this.setSnackbar({
-                status: true,
-                message: "Login Successfully!"
-              });
+              if (memInfoResp.status === 200) {
+                localStorage.setItem("jwt", jwt);
+                localStorage.setItem(
+                  "user_info",
+                  JSON.stringify(userInfoResp.data)
+                );
+                localStorage.setItem(
+                  "mem_info",
+                  JSON.stringify(memInfoResp.data)
+                );
+                this.fetchLogged();
+                this.setLoginDialog();
+                this.setSnackbar({
+                  status: true,
+                  message: "Login Successfully!"
+                });
+              } else {
+                this.errors.push("Can not get info!");
+              }
             } else {
-              this.errors.push("Can not get info!");
+              this.errors.push("Can not get user info!");
             }
           } else {
-            this.errors.push("Can not get user info!");
+            this.errors.push(
+              "Login failed! Please check your username and password"
+            );
           }
+          this.username = "";
+          this.password = "";
         } else {
-          this.errors.push(
-            "Login failed! Please check your username and password"
-          );
+          this.errors.push("Password must be at least 8 characters");
         }
-        this.username = "";
-        this.password = "";
       }
     }
   },

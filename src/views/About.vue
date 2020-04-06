@@ -1,107 +1,97 @@
 <template>
-  <div class="about">
-    <h1>Here we go again:</h1>
-    <p v-if="user.length">
-      <b>Let see what happen:</b>
-      <b-container>
-        <b-pagination
-          :per-page="perPage"
-          :total-rows="rows"
-          align="center"
-          aria-controls="myCol"
-          v-model="currentPage"
-        ></b-pagination>
-        <!-- <b-col id="myCol" >
-                  <p>{{item.id}}</p>
-                </b-col> -->
-
-        <div class="row">
-          <div
-            :key="index"
-            class="col"
-            v-for="(item, index) in currentPageItems"
-          >
-            <img :src="item.file_url" />
-          </div>
-        </div>
-      </b-container>
-    </p>
+  <div id="app">
+    <v-btn color="error" @click="toggle()">{{buttonText}}</v-btn>
+    <v-file-input
+      accept="image/png, image/jpeg, image/bmp"
+      placeholder="Pick an avatar"
+      prepend-icon="mdi-camera"
+      label="Avatar"
+      v-model="imageFile"
+    ></v-file-input>
+    <div class="border container round">
+      <ckeditor
+        :editor="editor"
+        :disabled="editorDisable"
+        v-model="editorData"
+        :config="editorConfig"
+      ></ckeditor>
+    </div>
+    <!-- <img src="https://patra.s3.amazonaws.com/images/1585462383239_Bosch-Supergraphic.jpg"/> -->
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import InlineEditor from "@ckeditor/ckeditor5-build-inline";
+// import Todo from "@/components/Todo.vue";
 
 export default {
   name: "about",
   data() {
     return {
-      perPage: 20,
-      currentPage: 1,
-      user: []
+      editor: InlineEditor,
+      editorDisable: false,
+      buttonText: "Edit",
+      imageFile: null,
+      content: "",
+      editorConfig: {
+        // The configuration of the editor.
+        placeholder: "Write your comment..."
+        // toolbar: [ 'bold', 'italic','underline', '|', 'undo', 'redo' ]
+      }
     };
   },
-  mounted() {
-    let login = "nikethai";
-    let hash = "voCsDS5hVCn2tB88uPC5dAqN";
-    let url =
-      "https://danbooru.donmai.us/posts.json?login=" +
-      login +
-      "&api_key=" +
-      hash +
-      "&limit=400&tags=sex";
-    axios
-      .get(url, {
-        // headers:{
-        //   'Authorization':'Basic bmlrZXRoYWk6dm9Dc0RTNWhWQ24ydEI4OHVQQzVkQXFO',
-        //   'Access-Control-Allow-Origin':'*'
-        // },
-        // auth:{
-        //   username: 'nikethai',
-        //   password: 'voCsDS5hVCn2tB88uPC5dAqN'
-        // }
-      })
-      .then(response => {
-        this.user = response.data;
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
+  components: {
+    // Todo
+  },
+  methods: {
+    toggle() {
+      // if (this.editorDisable) {
+      //   this.buttonText = "Save";
+      //   this.editorDisable = !this.editorDisable;
+      // } else {
+      //   this.buttonText = "Edit";
+      //   this.editorDisable = !this.editorDisable;
+      //   localStorage.setItem("test", this.content);
+      // }
+      let fd = new FormData();
+      fd.append("image",this.imageFile);
+      fd.append("content",this.content);
+      for (var vl of fd.values()){
+        console.log(vl);
+        
+      }
+      
+    }
   },
   computed: {
-    rows() {
-      return this.user.length;
-    },
-    currentPageItems() {
-      let nbPages = 0;
-      let leng = this.user.length;
-      let page_items = {};
-      for (let i = 0; i < leng; i += this.perPage) {
-        page_items[nbPages] = this.user.slice(i, i + this.perPage);
-        nbPages++;
+    editorData: {
+      get() {
+        return localStorage.getItem("test");
+      },
+      set(val) {
+        this.content = val;
       }
-      return page_items[this.currentPage - 1];
+    }
+  },
+  watch: {
+    editorData() {
+      console.log(this.editorData);
+    },
+    imageFile(){
+      console.log(this.imageFile);
+      
     }
   }
 };
 </script>
-<style scoped>
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
+<style  scoped>
+.border {
+  border: 1px solid #ccc !important;
 }
-
-/* Create four equal columns that sits next to each other */
-.col {
-  flex: 25%;
-  max-width: 25%;
-  padding: 0 4px;
+.container {
+  padding: 0.01em 16px;
 }
-
-.col img {
-  margin-top: 8px;
-  vertical-align: middle;
-  width: 100%;
+.round {
+  border-radius: 16px;
 }
 </style>

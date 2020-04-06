@@ -6,7 +6,6 @@ Vue.use(Router);
 
 const router = new Router({
   mode: "history",
-  base: process.env.BASE_URL,
   routes: [
     {
       path: "/home",
@@ -40,9 +39,10 @@ const router = new Router({
     {
       path: "/task/:id",
       name: "task",
+      props: true,
       meta: {
         title: "Task",
-        requiresAuth: false,
+        requiresAuth: true,
       },
       component: () => import("./views/Task.vue")
     },
@@ -50,7 +50,7 @@ const router = new Router({
       path: "/profile/:username?",
       name: "profile",
       meta: {
-        requiresAuth: false,
+        requiresAuth: true,
         title: "User profile"
       },
 

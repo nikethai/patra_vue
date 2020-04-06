@@ -1,6 +1,6 @@
 const path = require('path');
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "patra_vue" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/patra_vue/" : "/",
   configureWebpack: {
     devtool: "source-map",
     resolve: {

@@ -1,19 +1,16 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col
-        :cols="!isEmp(getTaskView)?'md-5 nopadding-task grey lighten-4':'md-12 nopadding-task'"
-      >
-        <v-card class="mx-auto" flat>
-          <v-card-title class="justify-center">Checklist1</v-card-title>
+      <v-col :cols="!isEmp(getTaskView)?'md-5 nopadding-task lighten-3':'md-12 nopadding-task'">
+        <v-card class="mx-auto lighten-3" flat>
+          <v-card-title class="justify-center headline font-weight-bold">{{getSheetName}}</v-card-title>
           <v-card-text>
-            <AddTodo />
-            <Todo @refresh="getTas()"/>
+            <Todo :sheetId="id" @refresh="getTas()" />
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col v-if="!isEmp(getTaskView)" cols="md-7  nopadding-desc">
-        <TodoDescription/>
+      <v-col v-if="!isEmp(getTaskView)" cols="md-7  pa-1">
+        <TodoDescription @refresh="getTas" />
       </v-col>
     </v-row>
   </v-container>
@@ -22,14 +19,13 @@
 <script>
 // @ is an alias to /src
 import Todo from "@/components/Todo.vue";
-import AddTodo from "@/components/AddTodo.vue";
 import TodoDescription from "@/components/TodoDescription.vue";
-import axios from "axios";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 
 export default {
   name: "task",
+  props: ["id"],
   data() {
     return {
       dialog: false,
@@ -39,11 +35,10 @@ export default {
   },
   components: {
     Todo,
-    AddTodo,
     TodoDescription
   },
   methods: {
-    ...mapActions(["fetchTask", "getMemActions"]),
+    ...mapActions(["fetchTask"]),
     getTas() {
       this.fetchTask(this.$route.params.id);
     },
@@ -54,15 +49,25 @@ export default {
         obj.constructor === Object
       );
     },
+    isNotEmpArr(arr) {
+      return Array.isArray(arr) && arr.length;
+    },
     assign() {
       this.dialog = false;
     }
   },
-  mounted() {
+  created() {
     this.getTas();
   },
-  asyncComputed: {
-    ...mapGetters(["getTaskView"])
+  computed: {
+    ...mapGetters(["getTaskView"]),
+    getSheetName() {
+      let sheetName = localStorage.getItem("sheet_name");
+      if (sheetName != null) {
+        return sheetName;
+      }
+      return "";
+    }
   }
 };
 </script>

@@ -1,11 +1,51 @@
 <template>
   <v-card class="mx-auto" outlined>
-    <v-card-title class="justify-center">{{getTaskView.taskName}}</v-card-title>
+    <v-card-title
+      v-if="!isEditing "
+      class="justify-center headline"
+    >{{allTask[getTaskViewByIndex].taskName}}</v-card-title>
+    <v-text-field solo :value="getTaskView.taskName" @input="onEditTaskName" v-if="isEditing"></v-text-field>
     <v-flex class="d-flex flex-row justify-space-around">
-      <div class="overline mb-0">Status: {{getTaskView.status_id === 0}}</div>
-      <v-dialog v-model="dialog" persistent max-width="500px">
+      <v-dialog v-if="!isEditing" v-model="doneDialog" persistent max-width="500px">
         <template v-slot:activator="{on}">
-          <v-btn v-on="on" class="overline" color="error" text>Assign</v-btn>
+          <v-btn
+            v-on="on"
+            class="overline mb-0"
+            color="deep-purple darken-1"
+            text
+          >Status: {{taskStatus}}</v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">Mark status</span>
+          </v-card-title>
+          <v-card-text>
+            <span>Mark your status</span>
+          </v-card-text>
+          <v-card-text>
+            <v-radio-group v-model="taskStatus" mandatory row>
+              <v-radio label="DOING" color="blue" value="DOING"></v-radio>
+              <v-radio label="DONE" color="red" value="DONE"></v-radio>
+            </v-radio-group>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="doneDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="onMarkStt">Mark</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn class="overline subtitle-1" dense text color="info" @click="saveEdit">{{ buttonValue }}</v-btn>
+      <!-- <div class="overline mb-0"></div> -->
+      <v-dialog v-if="!isEditing" v-model="assignDialog" persistent max-width="500px">
+        <template v-slot:activator="{on}">
+          <v-btn
+            v-on="on"
+            class="overline subtitle-1 font-weight-bold"
+            outlined
+            color="blue"
+            text
+          >Assign</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -26,71 +66,111 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="assignDialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="assign()">Assign</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <span v-if="getUsrFr">
-        <p v-for="usr in getUsrFr" :key="usr.memberId">{{usr.username}}</p>
-      </span>
-    </v-flex>
-    <v-card-text>{{ getTaskView.taskDetails }}</v-card-text>
-    <v-divider></v-divider>
-    <v-container v-if="getTaskView.comments && getTaskView.comments.length ">
-      <h5>Comments</h5>
-      <!-- <v-row class="mx-auto">
-              <v-col cols="12" style="text-align: left">
-                
-              </v-col>
-      </v-row>-->
-      <v-flex
-        v-if="getTaskView.comments.length > 0"
-        class="d-flex flex-column"
-        style="text-align: left"
-      >
-        <v-card v-for="cmt in getTaskView.comments" :key="cmt.id" tile>
-          <v-row no-gutters>
-            <v-list-item-avatar>
-              <v-img src="https://randomuser.me/api/portraits/men/85.jpg" />
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{cmt.username}}</v-list-item-title>
-            </v-list-item-content>
-          </v-row>
-
-          <v-row no-gutters>
-            <v-container>
-              <p class="text-wrap">{{cmt.comment}}</p>
-            </v-container>
-          </v-row>
+      <v-dialog v-if="!isEditing" v-model="deleteDialog" persistent max-width="290">
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" class="overline subtitle-1 red--text font-weight-bold" text ripple>Delete</v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Delete this task?</v-card-title>
+          <v-card-subtitle>This action cannot be reverted!</v-card-subtitle>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="deleteDialog = false">No</v-btn>
+            <v-btn color="red darken-1" text @click="deleteTask()">Yes</v-btn>
+          </v-card-actions>
         </v-card>
-      </v-flex>
+      </v-dialog>
+    </v-flex>
+
+    <v-card-text
+      v-if="!isEditing "
+      v-html="allTask[getTaskViewByIndex].taskDetails"
+      style="text-align: left"
+    ></v-card-text>
+    <span v-if="isEditing">
+      <ckeditor
+        :editor="editor"
+        :disabled="editorDisable"
+        :value="getTaskView.taskDetails"
+        @input="onEditTaskDesc"
+        :config="editorConfig"
+      ></ckeditor>
+    </span>
+
+    <v-divider></v-divider>
+    <v-container v-if="!isEditing" class="pa-2">
+      <h5>Comments</h5>
+      <span v-if="getTaskView.comments && getTaskView.comments.length ">
+        <Comments @refresh="onRefresh()" />
+      </span>
+      <div class="border container round mb-2">
+        <ckeditor
+          :editor="editor"
+          :disabled="editorDisable"
+          :value="content"
+          @input="onEditorEdit"
+          :config="editorConfig"
+        ></ckeditor>
+        <v-btn color="green" text small @click="submitComment(getTaskView.taskId)">Send</v-btn>
+      </div>
     </v-container>
   </v-card>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import helper from "@/util/fetchHelper.js";
+import Comments from "@/components/Comments.vue";
+import InlineEditor from "@ckeditor/ckeditor5-build-inline";
 
 export default {
   name: "tododescription",
   data() {
     return {
-      dialog: false,
-      items: []
+      assignDialog: false,
+      doneDialog: false,
+      deleteDialog: false,
+      isEditing: false,
+      editorDisable: false,
+      buttonText: "Edit",
+      buttonValue: "Edit",
+      items: [],
+      editor: InlineEditor,
+      taskStt: "",
+      content: "",
+      taskName: "",
+      taskDetail: "",
+      editorConfig: {
+        // The configuration of the editor.
+        placeholder: "Write your comment...",
+        toolbar: ["bold", "italic", "|", "undo", "redo"]
+      }
     };
   },
+  components: {
+    Comments
+  },
   methods: {
+    ...mapActions([""]),
     getUserFromOrgID() {
-      let mem = localStorage.getItem("mem_info");
-      if (mem != null) {
-        mem = JSON.parse(mem);
+      let orgId = localStorage.getItem("select_org");
+      let jwt = localStorage.getItem("jwt");
+      if (orgId != null && jwt != null) {
+        let config = {
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          }
+        };
         axios
           .get(
-            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${mem.orgId}/members`
+            `${process.env.VUE_APP_API_URL}/api/v0/organizations/${orgId}/members`,
+            config
           )
           .then(res => {
             // let stringarr = res.data.map(item => {
@@ -103,7 +183,7 @@ export default {
       }
     },
     async assign() {
-      this.dialog = false;
+      this.assignDialog = false;
       let taskID = this.getTaskView.taskId;
       let assigneeSelected = this.getMem;
       let assignResp = await helper.assignHelper(taskID, assigneeSelected);
@@ -112,11 +192,161 @@ export default {
           status: true,
           message: "Assign Successfully!"
         });
+        this.$emit("refresh");
       } else {
         this.$store.dispatch("setSnackbar", {
           status: true,
           message: "Assign Failed!"
         });
+      }
+    },
+    async submitComment(taskId) {
+      if (this.content != null && this.content.length > 0 && taskId != null) {
+        let usrCmt = this.getUserInfo.name;
+        let jwt = localStorage.getItem("jwt");
+        if (usrCmt != null && jwt != null) {
+          let cmtResp = await helper.commentHelp(
+            taskId,
+            this.content,
+            usrCmt,
+            jwt
+          );
+          if (cmtResp.status === 200) {
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Comment added!"
+            });
+            this.$emit("refresh");
+            this.content = "";
+          } else {
+            console.log(cmtResp);
+
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Fail to add comment!"
+            });
+            this.content = "";
+          }
+        }
+      }
+    },
+    async deleteTask() {
+      let jwt = localStorage.getItem("jwt");
+      let taskID = this.getTaskView.taskId;
+
+      if (taskID != null && jwt != null) {
+        let delTaskResp = await helper.deleteTaskHelp(taskID, jwt);
+        if (delTaskResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Successfully!"
+          });
+          this.$store.commit("getTask", {});
+          this.$emit("refresh");
+        } else {
+          console.log(delTaskResp);
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Delete Failed!"
+          });
+        }
+      }
+      // this.delTask(id); //not change in state anymore
+      this.deleteDialog = false;
+    },
+    onEditorEdit(value) {
+      this.content = value;
+    },
+    async onMarkStt() {
+      let tskId = this.getTaskView.taskId;
+      let jwt = localStorage.getItem("jwt");
+      if (
+        this.taskStt != null &&
+        this.taskStt.length &&
+        tskId != null &&
+        jwt != null
+      ) {
+        let markSttResp = await helper.markStatusHelp(tskId, jwt, this.taskStt);
+        if (markSttResp.status === 200) {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Mark status successfully!"
+          });
+          this.$emit("refresh");
+          this.doneDialog = false;
+        } else {
+          this.$store.dispatch("setSnackbar", {
+            status: true,
+            message: "Fail to mark status!"
+          });
+        }
+      }
+    },
+    isEmpArr(arr) {
+      return Array.isArray(arr) && arr.length;
+    },
+    getColor(status) {
+      if (status === 0) {
+        return "black--text";
+      } else if (status === 1) {
+        return "warning--text";
+      } else if (status === 2) {
+        return "blue--text";
+      } else if (status === 3) {
+        return "success--text";
+      }
+    },
+    onRefresh() {
+      this.$emit("refresh");
+    },
+    onEditTaskDesc(value) {
+      console.log("select value: ", value);
+      this.taskDetail = value;
+    },
+    onEditTaskName(value) {
+      console.log("select value: ", value);
+      this.taskName = value;
+    },
+    async saveEdit() {
+      if (!this.isEditing) {
+        this.buttonValue = "Save";
+        this.isEditing = true;
+        this.$store.commit("setEditButtonClick");
+      } else {
+        if (this.taskName.length || this.taskDetail.length) {
+          if (!this.taskName.length) {
+            this.taskName = this.getTaskView.taskName;
+          }
+          if (!this.taskDetail.length) {
+            this.taskDetail = this.getTaskView.taskDetails;
+          }
+
+          let jwt = localStorage.getItem("jwt");
+          let taskId = this.getTaskView.taskId;
+          if (jwt != null && taskId != null) {
+            let editTaskResp = await helper.addTaskEditHelp(
+              taskId,
+              this.taskName,
+              this.taskDetail,
+              jwt
+            );
+            if (editTaskResp.status === 200) {
+              this.$store.dispatch("setSnackbar", {
+                status: true,
+                message: "Edit Successfully!"
+              });
+              this.$emit("refresh");
+            }
+          } else {
+            this.$store.dispatch("setSnackbar", {
+              status: true,
+              message: "Edit Failed!"
+            });
+          }
+        }
+        this.isEditing = false;
+        this.$store.commit("setEditButtonClick");
+        this.buttonValue = "Edit";
       }
     }
   },
@@ -124,7 +354,15 @@ export default {
     this.getUserFromOrgID();
   },
   computed: {
-    ...mapGetters(["getTaskView", "getMem"]),
+    ...mapGetters([
+      "getTaskView",
+      "getMem",
+      "getUserInfo",
+      "isEditButtonClicked",
+      "getTaskViewByIndex",
+      "allTask",
+      "getTaskViewStatus"
+    ]),
     getUsrFr: {
       get() {
         return this.getMem;
@@ -133,10 +371,47 @@ export default {
         console.log("select value: ", value);
         this.$store.dispatch("setMems", value);
       }
+    },
+    editorData: {
+      get() {
+        return "";
+      },
+      set(val) {
+        this.content = val;
+      }
+    },
+    taskStatus: {
+      get() {
+        let sttId = this.allTask[this.getTaskViewByIndex].statusId;
+        if (sttId) {
+          switch (sttId) {
+            case 0:
+              return "PENDING";
+            case 1:
+              return "DOING";
+            case 3:
+              return "DONE";
+          }
+        }
+        return "";
+      },
+      set(val) {
+        console.log(val);
+        this.taskStt = val;
+      }
     }
   }
 };
 </script>
 
 <style>
+.border {
+  border: 1px solid #ccc !important;
+}
+.container {
+  padding: 0.01em 16px;
+}
+.round {
+  border-radius: 16px;
+}
 </style>

@@ -12,7 +12,27 @@ export default {
         return axios
             .post(`${process.env.VUE_APP_API_URL}/api/login`, qs.stringify(form), config_urlencode)
             .then(res => res)
-            .catch(e => e); //eslint-disable-line no-console
+            .catch(e => e.response); //eslint-disable-line no-console
+
+    },
+    async logoutHelp(jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/logout`, null, config)
+            .then(res => res)
+            .catch(e => e.response); //eslint-disable-line no-console
+
+    },
+    async googleLoginHelp(token) {
+        // console.log(qs.stringify(form));
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/users/google/login`, token)
+            .then(res => res)
+            .catch(e => e.response); //eslint-disable-line no-console
 
     },
     async userInfoHelp(jwt) {
@@ -25,16 +45,25 @@ export default {
                     }
                 })
                 .then(res => res)
-                .catch(e => e);//eslint-disable
+                .catch(e => e.response);//eslint-disable
         }
         return info;
 
     },
-    async memInfoHelp(currMemberId) {
-        return axios
-            .get(`${process.env.VUE_APP_API_URL}/api/v0/members/${currMemberId}`)
-            .then(res => res)
-            .catch(e => e);//eslint-disable
+    async memInfoHelp(username, jwt) {
+        let info;
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        if (jwt != null && username != null) {
+            info = await axios
+                .get(`${process.env.VUE_APP_API_URL}/api/v0/users/${username}/members`, config)
+                .then(res => res)
+                .catch(e => e.response);//eslint-disable
+        }
+        return info
 
     },
     async registerHelp(form) {
@@ -47,7 +76,7 @@ export default {
         return axios
             .post(`${process.env.VUE_APP_API_URL}/api/v0/users`, form)
             .then(res => res)
-            .catch(e => e); //eslint-disable-line no-console
+            .catch(e => e.response); //eslint-disable-line no-console
     },
     async assignHelper(taskId, selectedMem) {
         let selectedMemID = [];
@@ -67,10 +96,187 @@ export default {
             return axios
                 .patch(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/assignees?${stringParam}`, null, config)
                 .then(res => res)
-                .catch(e => e);//eslint-disable
+                .catch(e => e.response);//eslint-disable
 
         }
+    },
+    async commentHelp(taskId, comment, username, jwt) {
+        let data = {
+            comment: comment,
+            username: username
+        }
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
 
+    },
+    async getUserOrgHelp(username, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .get(`${process.env.VUE_APP_API_URL}/api/v0/users/${username}/organizations`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async getAllOrgHelp(jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .get(`${process.env.VUE_APP_API_URL}/api/v0/organizations/all`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async deleteTaskHelp(taskId, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async deleteSheetHelp(sheetId, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/sheets/${sheetId}`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async deleteCommentHelp(taskId, cmtId, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .delete(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/comments/${cmtId}`, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addUserToOrgHelp(orgId, username, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (orgId != null && username != null) {
+            data = {
+                orgId: orgId,
+                permission: "READ",
+                username: username
+            };
+        }
+
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/members/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addSheetHelp(orgId, sheetName, sheetDesc, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (orgId && sheetName != null && sheetDesc != null) {
+            data = {
+                orgId: orgId,
+                privateSheet: false,
+                sheetDescription: sheetDesc,
+                sheetName: sheetName
+            };
+        }
+
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/sheets/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addTaskHelp(sheetId, taskName, taskDetail, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (sheetId && taskName != null && taskDetail != null) {
+            data = {
+                dueDate: 0,
+                sheetId: sheetId,
+                taskDescription: "a",
+                taskDetails: taskDetail,
+                taskName: taskName
+            };
+        }
+
+        return axios
+            .post(`${process.env.VUE_APP_API_URL}/api/v0/tasks/`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async addTaskEditHelp(taskId, taskName, taskDetail, jwt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        let data = {}
+
+        if (taskId && taskName != null && taskDetail != null) {
+            data = {
+                dueDate: 0,
+                taskDetails: taskDetail,
+                taskName: taskName
+            };
+        }
+
+        return axios
+            .put(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}`, data, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
+
+    },
+    async markStatusHelp(taskId, jwt, stt) {
+        let config = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`
+            }
+        }
+        return axios
+            .patch(`${process.env.VUE_APP_API_URL}/api/v0/tasks/${taskId}/status?status=${stt}`, null, config)
+            .then(res => res)
+            .catch(e => e.response);//eslint-disable
 
     },
 }
